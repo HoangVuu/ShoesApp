@@ -19,35 +19,52 @@ const Stack = createStackNavigator();
 const BottomTab = () => {
   return (
     <Tabs.Navigator
-    tabBarOptions={{
-      showLabel: false,
-      activeTintColor: 'red',
-      inactiveTintColor:'#333333'
-    }}>
+    initialRouteName="Home"
+      tabBarOptions={{
+        showLabel: false,
+        activeTintColor: 'red',
+        inactiveTintColor: '#333333',
+      }}>
       <Tabs.Screen
         name="Home"
         component={Home}
-        options={{tabBarIcon: (props) => <Icon name="home" size={25} />}}
+        options={{
+          tabBarIcon: ({color}) => <Icon name="home" size={25} color={color} />,
+        }}
       />
       <Tabs.Screen
         name="Favorites"
         component={Favorites}
-        options={{tabBarIcon: () => <Icon name="hearto" size={25} />}}
+        options={{
+          tabBarIcon: ({color}) => (
+            <Icon name="hearto" size={25} color={color} />
+          ),
+        }}
       />
       <Tabs.Screen
         name="Cart"
         component={Cart}
-        options={{tabBarIcon: () => <Icon name="shoppingcart" size={25} />}}
-      />
-      <Tabs.Screen
-        name="Stores"
-        component={Stores}
-        options={{tabBarIcon: () => <Icon name="environmento" size={25} />}}
+        options={{
+          tabBarIcon: ({color}) => (
+            <Icon name="shoppingcart" size={25} color={color} />
+          ),
+        }}
       />
       <Tabs.Screen
         name="Store"
+        component={Stores}
+        options={{
+          tabBarIcon: ({color}) => (
+            <Icon name="enviromento" size={25} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="Profile"
         component={Profile}
-        options={{tabBarIcon: () => <Icon name="user" size={25} />}}
+        options={{
+          tabBarIcon: ({color}) => <Icon name="user" size={25} color={color} />,
+        }}
       />
     </Tabs.Navigator>
   );
@@ -56,7 +73,7 @@ const BottomTab = () => {
 const AppContainer = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name="index" component={BottomTab} />
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="ProductDetail" component={ProductDetail} />
