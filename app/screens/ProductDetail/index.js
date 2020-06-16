@@ -13,6 +13,7 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {actFetchDetail} from '../../redux/actions';
 import Icon from 'react-native-vector-icons/AntDesign';
+import RelatedProduct from '../../components/related-product';
 
 const {width, height} = Dimensions.get('window');
 
@@ -21,10 +22,11 @@ const ProductDetail = (props) => {
   const dispatch = useDispatch();
   const productDetail = useSelector((state) => state.products.productDetail);
 
-  const {id} = props.route.params;
-  console.log('productDetail', productDetail);
-  console.log('productDetail');
+  // const categories = JSON.parse(JSON.stringify(productDetail?.categories));
+  
 
+  console.log('categories1111', productDetail?.categories);
+  const {id} = props.route.params;
   const handleChangeSize = (id, value) => () => {
     setIsSelected(id);
     console.log('value', value);
@@ -32,18 +34,18 @@ const ProductDetail = (props) => {
 
   useEffect(() => {
     id && dispatch(actFetchDetail(id));
-  }, []);
+  }, [id]);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.mainContainer}>
       {productDetail && (
         <Fragment>
-          <ScrollView>
+          <ScrollView style={styles.scrollContainer}>
             <View style={styles.topContainer}>
               <View style={styles.background}>
                 <View style={styles.headerDetail}>
-                  <Icon name="arrowleft" size={25} />
-                  {/* <Text style={styles.category}>{ productDetail && productDetail.categories.length && productDetail.categories[0].category}</Text>  */}
+                  <Icon style={styles.btnBack} name="arrowleft" size={25} />
+                  <Text style={styles.category}>{productDetail?.categories[0]?.category}</Text>
                   <TouchableOpacity style={styles.btn}>
                     <Icon name="hearto" style={styles.btnIcon} />
                   </TouchableOpacity>
@@ -114,29 +116,29 @@ const ProductDetail = (props) => {
               </View>
 
               {/* Related Products */}
-              {/* <FlatList
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            data={products}
-            keyExtractor={(item) => item.id}
-            viewabilityConfig={{
-            waitForInteraction: true,
-            viewAreaCoveragePercentThreshold: 80,
-          }}
-        
-          renderItem={({item, index}) => {
-           return(
-            
-           )
-          }}
-        /> */}
+              <View>
+                <Text style={styles.relatedText}> Related Shoes</Text>
+                <FlatList
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  data={productDetail.relatedProducts}
+                  keyExtractor={(item) => item.id}
+                  viewabilityConfig={{
+                    waitForInteraction: true,
+                    viewAreaCoveragePercentThreshold: 80,
+                  }}
+                  renderItem={({item, index}) => {
+                    return <RelatedProduct item={item} />;
+                  }}
+                />
+              </View>
             </View>
           </ScrollView>
 
           {/* Add to cart  */}
-          <View style={styles.cartContainer}>
+          <TouchableOpacity style={styles.cartContainer}>
             <Text style={styles.cart}>Add to Cart</Text>
-          </View>
+          </TouchableOpacity>
         </Fragment>
       )}
     </SafeAreaView>
@@ -150,6 +152,27 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 
+  scrollContainer: {
+    height: height * 0.85,
+    backgroundColor: 'white',
+  },
+
+  mainContainer: {
+    backgroundColor: 'white',
+  },
+
+  headerDetail: {
+    padding: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  
+  btnBack: {
+    marginLeft: 5,
+  },
+
   background: {
     height: height * 0.4,
     backgroundColor: '#DD9A89',
@@ -158,6 +181,7 @@ const styles = StyleSheet.create({
   category: {
     fontWeight: 'bold',
     color: '#fff',
+    fontSize: 18,
   },
 
   bigImg: {
@@ -205,7 +229,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 10,
+    marginRight: 5,
     // flexShrink: 0,
   },
   info: {
@@ -215,7 +239,7 @@ const styles = StyleSheet.create({
   },
 
   name: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
     flexShrink: 0,
   },
@@ -237,12 +261,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 
-  headerDetail: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
+
 
   bottomContainer: {
     padding: 15,
@@ -255,7 +274,7 @@ const styles = StyleSheet.create({
   },
 
   size: {
-    fontSize: 20,
+    fontSize: 19,
     fontWeight: 'bold',
     paddingTop: 15,
   },
@@ -282,16 +301,16 @@ const styles = StyleSheet.create({
   },
 
   cartContainer: {
-    display:'flex',
-    flexDirection:'row',
-    justifyContent:'center',
-    alignSelf:'center',
-    alignItems:'center',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    alignItems: 'center',
     backgroundColor: '#F93C66',
     width: width * 0.8,
-    height: height* 0.06,
+    height: height * 0.06,
     borderRadius: 8,
-    marginTop: 20
+    marginTop: 20,
   },
 
   cart: {
@@ -299,5 +318,9 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
 
-  relatedContainer: {},
+  relatedText: {
+    fontSize: 19,
+    fontWeight: 'bold',
+    paddingTop: 15,
+  },
 });

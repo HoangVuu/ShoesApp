@@ -1,26 +1,36 @@
 import React from 'react';
-import {StyleSheet, Text, View, Image, Dimensions} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
+import {withNavigation} from '@react-navigation/compat';
 
 const {width, height} = Dimensions.get('window');
 
 const RelatedProduct = (props) => {
   const {item} = props;
+
+  const goToDetail = () => {
+    props.navigation.navigate('ProductDetail', {
+      id: item.id,
+    });
+  };
+
   return (
     item && (
-      <View style={styles.relatedContainer}>
+      <TouchableOpacity onPress={goToDetail} style={styles.relatedContainer}>
         <Image
           resizeMode="contain"
           style={styles.relatedImg}
           source={{uri: item.image}}
         />
-        <Text style={styles.relatedName}>
-          {item.name
-            .toLocaleLowerCase()
-            .replace(item.categories[0]?.category?.toLowerCase(), '')
-            .trim()}
-        </Text>
+        <Text style={styles.relatedName}>{item.name}</Text>
         <Text style={styles.relatedPrice}>${item.price}</Text>
-      </View>
+      </TouchableOpacity>
     )
   );
 };
@@ -40,9 +50,13 @@ const styles = StyleSheet.create({
     transform: [{rotate: '-15deg'}],
   },
 
+  relatedName: {
+    textTransform: 'capitalize',
+  },
+
   relatedPrice: {
     marginBottom: 10,
   },
 });
 
-export default RelatedProduct;
+export default withNavigation(RelatedProduct);

@@ -16,6 +16,8 @@ const Product = (props) => {
   const [widthAnim] = useState(new Animated.Value(160));
   const [heightAnim] = useState(new Animated.Value(220));
 
+  const categories = JSON.parse(JSON.stringify(item.categories))
+
   const goToDetail = () => {
     props.navigation.navigate('ProductDetail', {
       id: item.id,
@@ -83,7 +85,7 @@ const Product = (props) => {
         <Text style={styles.productName}>
           {item.name
             .toLocaleLowerCase()
-            .replace(item.categories[0].category.toLowerCase(), '')
+            .replace(categories[0].category.toLowerCase(), '')
             .trim()}
         </Text>
         <Text style={styles.productPrice}>${item.price}</Text>
