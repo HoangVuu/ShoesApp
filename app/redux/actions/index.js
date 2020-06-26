@@ -3,7 +3,9 @@ import {
   FETCH_CATEGORY,
   FETCH_PRODUCTS_BY_CATEGORY,
   FETCH_PRODUCT_BY_ID,
-  FETCH_ALL_PRODUCTS
+  FETCH_ALL_PRODUCTS,
+  LIKE_SHOES,
+  DISLIKE_SHOES,
 } from './type';
 
 export const createAction = (type, payload) => ({
@@ -30,7 +32,7 @@ export const actFetchCategory = () => {
   };
 };
 
-export const actFetchAll= () => {
+export const actFetchAll = () => {
   //async action
   return (dispatch) => {
     axios({
@@ -67,6 +69,46 @@ export const actFetchDetail = (id) => {
     })
       .then((res) => {
         dispatch(createAction(FETCH_PRODUCT_BY_ID, res.data.content));
+      })
+      .catch((err) => console.log({...err}));
+  };
+};
+
+export const likeProduct = (id, auth) => {
+  //async action
+  console.log(auth);
+  return (dispatch) => {
+    axios
+      .get(`http://svcy3.myclass.vn/api/Users/like?productId=${id}`, {
+        headers: {
+          Authorization: `Bearer ${auth}`,
+        },
+      })
+      .then(function (response) {
+        // handle success
+        console.log(response);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+        console.log({...error});
+      });
+  };
+};
+
+export const dislikeProduct = (id, auth) => {
+  //async action
+  return (dispatch) => {
+    axios({
+      method: 'GET',
+      url: `http://svcy3.myclass.vn/api/Users/unlike?productId=${id}`,
+      headers: {
+        Authorization: `Bearer ${auth}`,
+      },
+    })
+      .then((res) => {
+        // dispatch(createAction(DISLIKE_SHOES, res.data.content));
+        console.log(res.data.content);
       })
       .catch((err) => console.log({...err}));
   };

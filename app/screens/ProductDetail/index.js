@@ -20,32 +20,40 @@ const {width, height} = Dimensions.get('window');
 const ProductDetail = (props) => {
   const [isSelected, setIsSelected] = useState(0);
   const dispatch = useDispatch();
-  const productDetail = useSelector((state) => state.products.productDetail);
+  const productDetail = useSelector((state) => state.products?.productDetail);
 
   // const categories = JSON.parse(JSON.stringify(productDetail?.categories));
-  
 
-  console.log('categories1111', productDetail?.categories);
   const {id} = props.route.params;
+  const {navigation} = props;
   const handleChangeSize = (id, value) => () => {
     setIsSelected(id);
     console.log('value', value);
   };
 
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
+  console.log('productDe', productDetail);
   useEffect(() => {
-    id && dispatch(actFetchDetail(id));
+    dispatch(actFetchDetail(id));
   }, [id]);
 
+  console.log('here', productDetail);
   return (
     <SafeAreaView style={styles.mainContainer}>
-      {productDetail && (
+      {productDetail != null && (
         <Fragment>
           <ScrollView style={styles.scrollContainer}>
             <View style={styles.topContainer}>
               <View style={styles.background}>
                 <View style={styles.headerDetail}>
-                  <Icon style={styles.btnBack} name="arrowleft" size={25} />
-                  <Text style={styles.category}>{productDetail?.categories[0]?.category}</Text>
+                  <TouchableOpacity onPress={handleGoBack}>
+                    <Icon style={styles.btnBack} name="arrowleft" size={25} />
+                  </TouchableOpacity>
+                  <Text style={styles.category}>
+                    {productDetail?.categories[0].category}
+                  </Text>
                   <TouchableOpacity style={styles.btn}>
                     <Icon name="hearto" style={styles.btnIcon} />
                   </TouchableOpacity>
@@ -158,6 +166,7 @@ const styles = StyleSheet.create({
   },
 
   mainContainer: {
+    position: 'relative',
     backgroundColor: 'white',
   },
 
@@ -168,7 +177,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  
+
   btnBack: {
     marginLeft: 5,
   },
@@ -260,8 +269,6 @@ const styles = StyleSheet.create({
   btnIcon: {
     fontSize: 18,
   },
-
-
 
   bottomContainer: {
     padding: 15,

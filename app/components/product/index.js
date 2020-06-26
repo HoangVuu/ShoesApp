@@ -6,22 +6,55 @@ import {
   Animated,
   Image,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import IconFont from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/AntDesign';
 import {withNavigation} from '@react-navigation/compat';
+import {useSelector, useDispatch} from 'react-redux';
+import {likeProduct, dislikeProduct} from '../../redux/actions';
 
 const Product = (props) => {
+  const dispatch = useDispatch();
+  const [isLove, setIsLove] = useState(false);
   const {item, isCurrent} = props;
   const [flipAnim] = useState(new Animated.Value(0));
   const [widthAnim] = useState(new Animated.Value(160));
   const [heightAnim] = useState(new Animated.Value(220));
 
-  const categories = JSON.parse(JSON.stringify(item.categories))
+  const categories = JSON.parse(JSON.stringify(item.categories));
+
+  const userInfo = useSelector((state) => state.userInfo);
 
   const goToDetail = () => {
     props.navigation.navigate('ProductDetail', {
       id: item.id,
     });
+  };
+
+  useEffect(() => {
+    isLove
+      ? dispatch(likeProduct(item.id, userInfo?.data?.content?.accessToken))
+      : dispatch(dislikeProduct(item.id, userInfo?.data?.content?.accessToken));
+  }, [isLove]);
+
+  const handleFavorite = () => {
+    setIsLove(!isLove);
+  };
+
+  const handleLoginrequest = () => {
+    Alert.alert(
+      'Yêu cầu đăng nhập',
+      'Bạn phải đăng nhập để sử dụng chức năng này',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ],
+      {cancelable: false},
+    );
   };
 
   useEffect(() => {
@@ -99,7 +132,17 @@ const Product = (props) => {
           color="white"
         />
       </TouchableOpacity>
-      {/* <Icon name="hearto" style={styles.iconHeart} /> */}
+      <TouchableOpacity
+        style={styles.favorite}
+        onPress={userInfo?.isLogin ? handleFavorite : handleLoginrequest}>
+        {isLove ? (
+          <View>
+            <Icon name="heart" size={18} color="red" style={styles.shadow} />
+          </View>
+        ) : (
+          <Icon name="hearto" size={18} />
+        )}
+      </TouchableOpacity>
     </Animated.View>
   );
 };
@@ -109,6 +152,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#517ad5',
     borderRadius: 15,
     marginRight: 50,
+    position: 'relative',
   },
 
   productInfo: {
@@ -145,6 +189,20 @@ const styles = StyleSheet.create({
   iconContainer: {
     display: 'flex',
     alignItems: 'flex-end',
+  },
+
+  favorite: {
+    position: 'absolute',
+    right: 10,
+    top: 8,
+  },
+
+  shadow: {
+    shadowColor: 'black',
+    shadowOffset: {width: 2, height: 2},
+    shadowOpacity: 0.9,
+    shadowRadius: 2,
+    elevation: 5,
   },
 });
 

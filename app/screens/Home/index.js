@@ -34,7 +34,6 @@ const Home = () => {
   // const [slideAnim] = useState(new Animated.Value(-200));
   const [currentItemOnView, setCurrentItemOnView] = useState(0);
   const handleChange = useCallback((params) => {
-    // console.log('params.changed', params.changed);
     setCurrentItemOnView(params.changed[0].index);
   }, []);
 
@@ -149,8 +148,9 @@ export default Home;
 const styles = StyleSheet.create({
   categoryContainer: {
     marginTop: 10,
-    marginBottom: 10
+    marginBottom: 10,
   },
+  
   categoryItem: {
     marginHorizontal: 15,
   },
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingTop: 10,
-    paddingBottom: 7
+    paddingBottom: 7,
   },
 
   moreText: {
