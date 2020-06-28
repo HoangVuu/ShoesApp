@@ -28,18 +28,16 @@ const ProductDetail = (props) => {
   const {navigation} = props;
   const handleChangeSize = (id, value) => () => {
     setIsSelected(id);
-    console.log('value', value);
   };
 
   const handleGoBack = () => {
     navigation.goBack();
   };
-  console.log('productDe', productDetail);
+  // console.log('productDe', productDetail);
   useEffect(() => {
     dispatch(actFetchDetail(id));
   }, [id]);
 
-  console.log('here', productDetail);
   return (
     <SafeAreaView style={styles.mainContainer}>
       {productDetail != null && (
@@ -52,7 +50,7 @@ const ProductDetail = (props) => {
                     <Icon style={styles.btnBack} name="arrowleft" size={25} />
                   </TouchableOpacity>
                   <Text style={styles.category}>
-                    {productDetail?.categories[0].category}
+                    {/* {productDetail?.categories[0].category} */}Nike
                   </Text>
                   <TouchableOpacity style={styles.btn}>
                     <Icon name="hearto" style={styles.btnIcon} />

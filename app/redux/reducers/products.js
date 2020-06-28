@@ -8,7 +8,7 @@ let initialState = {
   allProducts: [],
   productsList: [],
   productDetail: {},
-  likedProduct:[],
+  likedProduct: [],
 };
 
 export default (state = initialState, {type, payload}) => {
@@ -17,8 +17,7 @@ export default (state = initialState, {type, payload}) => {
       state.productsList = payload;
       return {...state};
 
-    case FETCH_PRODUCT_BY_ID:{
-      console.log("run here",payload);
+    case FETCH_PRODUCT_BY_ID: {
       return {...state, productDetail: payload};
     }
 

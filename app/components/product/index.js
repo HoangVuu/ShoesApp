@@ -26,6 +26,14 @@ const Product = (props) => {
 
   const userInfo = useSelector((state) => state.userInfo);
 
+  const addToCart = () => {
+    // send request add to cart
+    dispatch({
+      type: 'ADD_TO_CART', //thuộc tính bắt buộc: mô tả hành động
+      payload: item, // khi nào cần gửi dữ liệu lên thì gửi kèm
+    });
+  };
+
   const goToDetail = () => {
     props.navigation.navigate('ProductDetail', {
       id: item.id,
@@ -113,6 +121,20 @@ const Product = (props) => {
         // opacity: fadeAnim,
         // transform: [{translateY: slideAnim}],
       }}>
+      <TouchableOpacity onPress={addToCart} style={{paddingBottom: 10}}>
+        <View
+          style={{
+            backgroundColor: 'red',
+            alignSelf: 'center',
+            borderRadius: 20,
+            width: '75%',
+            height: 30,
+            justifyContent: 'center',
+          }}>
+          <Text style={{textAlign: 'center', color: 'white'}}>ADD TO CART</Text>
+        </View>
+      </TouchableOpacity>
+
       <View style={styles.productInfo}>
         <Text style={styles.productCat}>{item.categories[0].category}</Text>
         <Text style={styles.productName}>
@@ -132,6 +154,7 @@ const Product = (props) => {
           color="white"
         />
       </TouchableOpacity>
+
       <TouchableOpacity
         style={styles.favorite}
         onPress={userInfo?.isLogin ? handleFavorite : handleLoginrequest}>

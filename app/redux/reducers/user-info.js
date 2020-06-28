@@ -1,8 +1,9 @@
-import {SET_USER_INFO} from '../actions/type';
+import {SET_USER_INFO, GET_PROFILE} from '../actions/type';
 
 let initialState = {
   data: null,
   isLogin: null,
+  profile: null,
 };
 
 const reducer = (state = initialState, {type, payload}) => {
@@ -14,6 +15,11 @@ const reducer = (state = initialState, {type, payload}) => {
       } else {
         state.isLogin = false;
       }
+      return {...state};
+    }
+
+    case GET_PROFILE: {
+      state.profile = payload;
       return {...state};
     }
     default:
