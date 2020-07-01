@@ -30,6 +30,8 @@ const Home = () => {
   const categoryList = useSelector((state) => state.category.categoryList);
   const allProducts = useSelector((state) => state.products.allProducts);
   const [selectedCategory, setSelectedCategory] = useState(categoryList[0]?.id);
+  const productsList = useSelector((state) => state.products?.productsList);
+
   // const [fadeAnim] = useState(new Animated.Value(0));
   // const [slideAnim] = useState(new Animated.Value(-200));
   const [currentItemOnView, setCurrentItemOnView] = useState(0);
@@ -42,7 +44,6 @@ const Home = () => {
     dispatch(actFetchAll());
   };
   console.log('allProducts', productsList);
-  const productsList = useSelector((state) => state.products?.productsList);
 
   useEffect(() => {
     dispatch(actFetchProducts(selectedCategory));
@@ -92,24 +93,29 @@ const Home = () => {
 
         {/* Products */}
         <View>
-          <FlatList
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            data={productsList}
-            keyExtractor={(item) => item.id}
-            viewabilityConfig={{
-              waitForInteraction: true,
-              viewAreaCoveragePercentThreshold: 80,
-            }}
-            // onEndReachedThreshold={80} phân trang
-            // onEndReached={}
-            // onViewableItemsChanged={handleChange}
-            renderItem={({item, index}) =>
-              productsList && (
-                <Product item={item} isCurrent={index === currentItemOnView} />
-              )
-            }
-          />
+          {productsList && (
+            <FlatList
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              data={productsList}
+              keyExtractor={(item) => item.id}
+              viewabilityConfig={{
+                waitForInteraction: true,
+                viewAreaCoveragePercentThreshold: 80,
+              }}
+              // onEndReachedThreshold={80} phân trang
+              // onEndReached={}
+              // onViewableItemsChanged={handleChange}
+              renderItem={({item, index}) =>
+                productsList && (
+                  <Product
+                    item={item}
+                    isCurrent={index === currentItemOnView}
+                  />
+                )
+              }
+            />
+          )}
         </View>
 
         {/* More */}
@@ -150,7 +156,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
   },
-  
+
   categoryItem: {
     marginHorizontal: 15,
   },

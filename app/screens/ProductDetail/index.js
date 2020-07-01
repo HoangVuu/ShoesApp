@@ -30,6 +30,13 @@ const ProductDetail = (props) => {
     setIsSelected(id);
   };
 
+  const addToCart = () => {
+    dispatch({
+      type: 'ADD_TO_CART', //thuộc tính bắt buộc: mô tả hành động
+      payload: productDetail, // khi nào cần gửi dữ liệu lên thì gửi kèm
+    });
+  };
+
   const handleGoBack = () => {
     navigation.goBack();
   };
@@ -103,7 +110,7 @@ const ProductDetail = (props) => {
                   horizontal
                   data={productDetail.size}
                   showsHorizontalScrollIndicator={false}
-                  keyExtractor={(item) => item.id}
+                  keyExtractor={(item) => item?.id}
                   renderItem={({item, index}) => {
                     const selected = index === isSelected;
                     const sizeNameStyle = selected
@@ -128,7 +135,7 @@ const ProductDetail = (props) => {
                   horizontal
                   showsHorizontalScrollIndicator={false}
                   data={productDetail.relatedProducts}
-                  keyExtractor={(item) => item.id}
+                  keyExtractor={(item) => item?.id}
                   viewabilityConfig={{
                     waitForInteraction: true,
                     viewAreaCoveragePercentThreshold: 80,
@@ -142,7 +149,7 @@ const ProductDetail = (props) => {
           </ScrollView>
 
           {/* Add to cart  */}
-          <TouchableOpacity style={styles.cartContainer}>
+          <TouchableOpacity onPress={addToCart} style={styles.cartContainer}>
             <Text style={styles.cart}>Add to Cart</Text>
           </TouchableOpacity>
         </Fragment>

@@ -63,6 +63,11 @@ const Cart = () => {
           }}
           keyExtractor={(item, index) => index}
         />
+        {/* <View style={{alignItems: 'center', marginTop:20}}>
+            <Text style={{color: '#847d7d'}}>
+              Giỏ hàng của bạn đang trống, vui lòng chọn thêm
+            </Text>
+          </View> */}
       </ScrollView>
       {/* Next  */}
       <View>

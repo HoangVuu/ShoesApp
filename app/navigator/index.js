@@ -3,7 +3,7 @@ import {AsyncStorage} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
-import SignIn from '../screens/Signin';
+import SignUp from '../screens/SignUp';
 import ProductDetail from '../screens/ProductDetail';
 import Stores from '../screens/Stores';
 import Cart from '../screens/Cart';
@@ -22,21 +22,15 @@ const Stack = createStackNavigator();
 
 const AppContainer = () => {
   const dispatch = useDispatch(); // hỗ trợ dispatch ko cần connect
-  const userInfo = useSelector((state) => state.userInfo);
-  const isLogin = useSelector((state) => state.userInfo.isLogin);
 
-  console.log('user', userInfo);
   useEffect(() => {
     //1. Đem lưu trên store
     AsyncStorage.getItem('userInfo').then((val) => {
+      console.log(val);
       dispatch(createAction(SET_USER_INFO, val));
       //2. Lấy userInfo xuống store và tiến hành ẩn hiện các stack sign in
     });
   }, [dispatch]);
-
-  if (isLogin === null) {
-    return null;
-  }
 
   const BottomTab = () => {
     return (
@@ -54,6 +48,7 @@ const AppContainer = () => {
             tabBarIcon: ({color}) => (
               <Icon name="home" size={25} color={color} />
             ),
+            // topTabs: {hideShadow: true, backgroundColor: 'black'},
           }}
         />
         <Tabs.Screen
@@ -83,27 +78,16 @@ const AppContainer = () => {
             ),
           }}
         />
-        {!isLogin ? (
-          <Tabs.Screen
-            name="SignIn"
-            component={SignIn}
-            options={{
-              tabBarIcon: ({color}) => (
-                <Icon name="user" size={25} color={color} />
-              ),
-            }}
-          />
-        ) : (
-          <Tabs.Screen
-            name="Profile"
-            component={Profile}
-            options={{
-              tabBarIcon: ({color}) => (
-                <Icon name="user" size={25} color={color} />
-              ),
-            }}
-          />
-        )}
+
+        <Tabs.Screen
+          name="Profile"
+          component={Profile}
+          options={{
+            tabBarIcon: ({color}) => (
+              <Icon name="user" size={25} color={color} />
+            ),
+          }}
+        />
       </Tabs.Navigator>
     );
   };
@@ -113,6 +97,7 @@ const AppContainer = () => {
         <Stack.Screen name="index" component={BottomTab} />
         <Stack.Screen name="ProductDetail" component={ProductDetail} />
         <Stack.Screen name="Category" component={Category} />
+        <Stack.Screen name="SignUp" component={SignUp} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -2,7 +2,7 @@ import {SET_USER_INFO, GET_PROFILE} from '../actions/type';
 
 let initialState = {
   data: null,
-  isLogin: null,
+  isLogin: false,
   profile: null,
 };
 
@@ -14,6 +14,7 @@ const reducer = (state = initialState, {type, payload}) => {
         state.isLogin = true;
       } else {
         state.isLogin = false;
+        state.profile =null
       }
       return {...state};
     }

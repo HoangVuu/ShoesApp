@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import IconFont from 'react-native-vector-icons/FontAwesome';
+import IconF from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {withNavigation} from '@react-navigation/compat';
 import {useSelector, useDispatch} from 'react-redux';
@@ -121,8 +121,7 @@ const Product = (props) => {
         // opacity: fadeAnim,
         // transform: [{translateY: slideAnim}],
       }}>
-      <TouchableOpacity onPress={addToCart} style={{paddingBottom: 10}}>
-        <View
+      {/* <View
           style={{
             backgroundColor: 'red',
             alignSelf: 'center',
@@ -132,8 +131,7 @@ const Product = (props) => {
             justifyContent: 'center',
           }}>
           <Text style={{textAlign: 'center', color: 'white'}}>ADD TO CART</Text>
-        </View>
-      </TouchableOpacity>
+        </View> */}
 
       <View style={styles.productInfo}>
         <Text style={styles.productCat}>{item.categories[0].category}</Text>
@@ -147,7 +145,7 @@ const Product = (props) => {
       </View>
       <Image source={{uri: item.image}} style={styles.productImg} />
       <TouchableOpacity onPress={goToDetail} style={styles.iconContainer}>
-        <IconFont
+        <IconF
           name="long-arrow-right"
           size={25}
           style={styles.iconArrow}
@@ -165,6 +163,10 @@ const Product = (props) => {
         ) : (
           <Icon name="hearto" size={18} />
         )}
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={addToCart} style={styles.cart}>
+        <IconF name="cart-plus" size={23} />
       </TouchableOpacity>
     </Animated.View>
   );
@@ -218,6 +220,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 10,
     top: 8,
+  },
+
+  cart: {
+    position: 'absolute',
+    right: 10,
+    top: 26,
   },
 
   shadow: {

@@ -8,77 +8,112 @@ import {
   SafeAreaView,
   Image,
   ImageBackground,
+  AsyncStorage,
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {getProfile} from '../../redux/actions';
 import Icon from 'react-native-vector-icons/AntDesign';
 import IconF from 'react-native-vector-icons/FontAwesome';
 import IconE from 'react-native-vector-icons/Entypo';
+import Signin from '../Signin';
 
 const {width, height} = Dimensions.get('window');
 
 const Profile = () => {
   const dispatch = useDispatch();
-  const accessToken = useSelector(
-    (state) => state.userInfo.data.content.accessToken,
+  const accessToken = useSelector((state) =>
+    state.userInfo.data ? state.userInfo.data.content.accessToken : null,
   );
 
   const profile = useSelector((state) => state.userInfo.profile);
 
+  const logOut = () => {
+    AsyncStorage.removeItem('userInfo');
+    AsyncStorage.removeItem('accessToken');
+    dispatch({
+      // isLogin: false,
+      type: 'SET_USER_INFO',
+    });
+  };
+
+  const onEditProfile = () => {
+
+  }
+
   console.log('111vvv', profile);
+  console.log('111vvv', accessToken);
 
   useEffect(() => {
-    !accessToken && dispatch(getProfile(accessToken));
-  });
+    if (accessToken) {
+      dispatch(getProfile(accessToken));
+    }
+  }, [accessToken]);
 
   return (
-    <SafeAreaView style={{backgroundColor: '#fff'}}>
-      <ImageBackground source={{uri: profile.avatar}} style={styles.container}>
-        <View style={styles.topContainer}>
-          <IconE
-            name="edit"
-            size={25}
-            style={{marginLeft: width * 0.9, marginTop: 10}}
-          />
-        </View>
-      </ImageBackground>
-      <Image style={styles.avatar} source={{uri: profile.avatar}} />
+    <>
+      {profile ? (
+        <SafeAreaView style={{backgroundColor: '#fff'}}>
+          <ImageBackground
+            source={{uri: profile?.avatar}}
+            style={styles.container}>
+            <View style={styles.topContainer}>
+              <TouchableOpacity onPress={onEditProfile}>
+                <IconE
+                  name="edit"
+                  size={25}
+                  style={{marginLeft: width * 0.9, marginTop: 10}}
+                />
+              </TouchableOpacity>
+            </View>
+          </ImageBackground>
+          <Image style={styles.avatar} source={{uri: profile?.avatar}} />
 
-      <View>
-        <Text style={styles.text}>Thông tin đăng nhập</Text>
-      </View>
+          <View>
+            <Text style={styles.text}>Thông tin đăng nhập</Text>
+          </View>
 
-      <View style={styles.bottomContainer}>
-        <View style={styles.rowInfo}>
-          <Icon name="user" size={22} color="#F93C66" style={styles.icon} />
-          <Text style={styles.textInfo}>{profile.name}</Text>
-        </View>
+          <View style={styles.bottomContainer}>
+            <View style={styles.rowInfo}>
+              <Icon name="user" size={22} color="#F93C66" style={styles.icon} />
+              <Text style={styles.textInfo}>{profile?.name}</Text>
+            </View>
 
-        <View style={styles.rowInfo}>
-          <IconF
-            name="transgender"
-            size={22}
-            color="#F93C66"
-            style={styles.icon}
-          />
-          <Text style={styles.textInfo}>{profile.gender ? 'Nam' : 'Nữ'}</Text>
-        </View>
+            <View style={styles.rowInfo}>
+              <IconF
+                name="transgender"
+                size={22}
+                color="#F93C66"
+                style={styles.icon}
+              />
+              <Text style={styles.textInfo}>
+                {profile?.gender ? 'Nam' : 'Nữ'}
+              </Text>
+            </View>
 
-        <View style={styles.rowInfo}>
-          <Icon name="mail" size={22} color="#F93C66" style={styles.icon} />
-          <Text style={styles.textInfo}>{profile.email}</Text>
-        </View>
+            <View style={styles.rowInfo}>
+              <Icon name="mail" size={22} color="#F93C66" style={styles.icon} />
+              <Text style={styles.textInfo}>{profile?.email}</Text>
+            </View>
 
-        <View style={styles.rowInfo}>
-          <Icon name="phone" size={22} color="#F93C66" style={styles.icon} />
-          <Text style={styles.textInfo}>{profile.phone}</Text>
-        </View>
-      </View>
+            <View style={styles.rowInfo}>
+              <Icon
+                name="phone"
+                size={22}
+                color="#F93C66"
+                style={styles.icon}
+              />
+              <Text style={styles.textInfo}>{profile?.phone}</Text>
+            </View>
+          </View>
 
-      <TouchableOpacity style={styles.cartContainer}>
-        <Text style={styles.cart}>Log Out</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+          <TouchableOpacity onPress={logOut} style={styles.cartContainer}>
+            <Text style={styles.cart}>Log Out</Text>
+          </TouchableOpacity>
+        </SafeAreaView>
+      ) : (
+        <Signin />
+      )}
+    </>
   );
 };
 
