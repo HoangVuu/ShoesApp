@@ -41,16 +41,18 @@ const Home = () => {
 
   const handleChangeCategory = (id) => () => {
     setSelectedCategory(id);
-    dispatch(actFetchAll());
+    // dispatch(actFetchAll());
   };
   console.log('allProducts', productsList);
-
+  console.log('categoryList[0]?.id', selectedCategory);
   useEffect(() => {
     dispatch(actFetchProducts(selectedCategory));
   }, [selectedCategory]);
 
   useEffect(() => {
+    setSelectedCategory(categoryList[0]?.id);
     dispatch(actFetchCategory());
+    dispatch(actFetchAll());
     // Animated.timing(fadeAnim, {
     //   toValue: 1,
     //   duration: 1000,
@@ -62,7 +64,7 @@ const Home = () => {
     //   friction: 1, // độ ma sát, càng lớn thì hiệu ứng càng chậm
     //   tension:1 // độ căng, càng lớn thì độ dập càng nhiều
     // }).start();
-  }, [dispatch]);
+  }, [dispatch, categoryList[0]?.id]);
 
   return (
     <SafeAreaView>
@@ -93,29 +95,32 @@ const Home = () => {
 
         {/* Products */}
         <View>
-          {productsList && (
-            <FlatList
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              data={productsList}
-              keyExtractor={(item) => item.id}
-              viewabilityConfig={{
-                waitForInteraction: true,
-                viewAreaCoveragePercentThreshold: 80,
-              }}
-              // onEndReachedThreshold={80} phân trang
-              // onEndReached={}
-              // onViewableItemsChanged={handleChange}
-              renderItem={({item, index}) =>
-                productsList && (
-                  <Product
-                    item={item}
-                    isCurrent={index === currentItemOnView}
-                  />
-                )
-              }
-            />
-          )}
+          <>
+            {productsList && (
+              <FlatList
+                style={styles.productListContainer}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                data={productsList}
+                keyExtractor={(item) => item.id}
+                viewabilityConfig={{
+                  waitForInteraction: true,
+                  viewAreaCoveragePercentThreshold: 80,
+                }}
+                // onEndReachedThreshold={80} phân trang
+                // onEndReached={}
+                // onViewableItemsChanged={handleChange}
+                renderItem={({item, index}) =>
+                  productsList && (
+                    <Product
+                      item={item}
+                      isCurrent={index === currentItemOnView}
+                    />
+                  )
+                }
+              />
+            )}
+          </>
         </View>
 
         {/* More */}
@@ -155,6 +160,10 @@ const styles = StyleSheet.create({
   categoryContainer: {
     marginTop: 10,
     marginBottom: 10,
+  },
+
+  productListContainer: {
+    marginLeft: 15,
   },
 
   categoryItem: {
