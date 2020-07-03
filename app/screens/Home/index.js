@@ -43,8 +43,7 @@ const Home = () => {
     setSelectedCategory(id);
     // dispatch(actFetchAll());
   };
-  console.log('allProducts', productsList);
-  console.log('categoryList[0]?.id', selectedCategory);
+
   useEffect(() => {
     dispatch(actFetchProducts(selectedCategory));
   }, [selectedCategory]);
@@ -67,7 +66,7 @@ const Home = () => {
   }, [dispatch, categoryList[0]?.id]);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.homeContainer}>
       <ScrollView>
         <Header title="Discover" />
         {/* Categories  */}
@@ -157,12 +156,18 @@ const Home = () => {
 export default Home;
 
 const styles = StyleSheet.create({
+  homeContainer: {
+    height: height,
+    backgroundColor: '#fff',
+  },
+
   categoryContainer: {
     marginTop: 10,
     marginBottom: 10,
   },
 
   productListContainer: {
+    marginTop: height * 0.02,
     marginLeft: 15,
   },
 
@@ -175,7 +180,8 @@ const styles = StyleSheet.create({
   },
 
   activeName: {
-    color: 'red',
+    color: '#F93C66',
+    fontWeight: 'bold',
   },
 
   moreContainer: {

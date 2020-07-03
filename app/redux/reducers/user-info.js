@@ -14,7 +14,7 @@ const reducer = (state = initialState, {type, payload}) => {
         state.isLogin = true;
       } else {
         state.isLogin = false;
-        state.profile =null
+        state.profile = null;
       }
       return {...state};
     }

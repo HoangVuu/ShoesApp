@@ -14,6 +14,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {actFetchDetail} from '../../redux/actions';
 import Icon from 'react-native-vector-icons/AntDesign';
 import RelatedProduct from '../../components/related-product';
+import Toast from 'react-native-simple-toast';
 
 const {width, height} = Dimensions.get('window');
 
@@ -35,6 +36,7 @@ const ProductDetail = (props) => {
       type: 'ADD_TO_CART', //thuộc tính bắt buộc: mô tả hành động
       payload: productDetail, // khi nào cần gửi dữ liệu lên thì gửi kèm
     });
+    Toast.show('Đã thêm thành công.', 200, Toast.LONG, Toast.BOTTOM);
   };
 
   const handleGoBack = () => {
@@ -205,8 +207,6 @@ const styles = StyleSheet.create({
     transform: [{rotate: '-20deg'}],
     marginLeft: '5%',
   },
-
-  // smallImg: null,
 
   smallImg: {
     width: 60,

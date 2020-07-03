@@ -9,6 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
+import IconF from 'react-native-vector-icons/FontAwesome';
 import {useDispatch} from 'react-redux';
 
 const {width, height} = Dimensions.get('window');
@@ -33,7 +34,6 @@ const CardItem = (props) => {
   };
 
   const removeCartItem = () => {
-    console.log('1111111111', 1111111111);
     // gui dispatch yêu cầu xóa
     dispatch({
       type: 'REMOVE_TO_CART',
@@ -42,7 +42,7 @@ const CardItem = (props) => {
   };
 
   const showNotify = () => {
-    Alert.alert('sdfgh', 'Do you want to delete this product?', [
+    Alert.alert('Notification', 'Do you want to delete this product?', [
       {text: 'Cancel', style: 'cancel'},
       {text: 'OK', onPress: () => removeCartItem()},
     ]);
@@ -61,7 +61,7 @@ const CardItem = (props) => {
   // }
 
   return (
-    <View style={{backgroundColor: '#fff'}}>
+    <View style={{backgroundColor: '#fff', paddingTop: height * 0.02}}>
       <View style={styles.cartContainer}>
         <View style={styles.background}>
           <Image style={styles.imgShoes} source={{uri: card.product.image}} />
@@ -81,6 +81,10 @@ const CardItem = (props) => {
               style={styles.btnQuantity}
               onPress={increaseQuantity}>
               <Icon name="plus" size={25} />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={showNotify} style={styles.deleteAll}>
+              <IconF name="remove" size={18} />
             </TouchableOpacity>
           </View>
         </View>
@@ -125,6 +129,7 @@ const styles = StyleSheet.create({
   },
 
   quantity: {
+    width: width * 0.55,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -154,6 +159,12 @@ const styles = StyleSheet.create({
   quantityNumber: {
     fontSize: 18,
     padding: 10,
+  },
+
+  deleteAll: {
+    margin: 10,
+    alignSelf: 'flex-end',
+    marginLeft: width * 0.23,
   },
 });
 

@@ -9,6 +9,7 @@ import {
   Image,
   ImageBackground,
   AsyncStorage,
+  Alert,
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {getProfile} from '../../redux/actions';
@@ -19,7 +20,7 @@ import Signin from '../Signin';
 
 const {width, height} = Dimensions.get('window');
 
-const Profile = () => {
+const Profile = (props) => {
   const dispatch = useDispatch();
   const accessToken = useSelector((state) =>
     state.userInfo.data ? state.userInfo.data.content.accessToken : null,
@@ -31,17 +32,21 @@ const Profile = () => {
     AsyncStorage.removeItem('userInfo');
     AsyncStorage.removeItem('accessToken');
     dispatch({
-      // isLogin: false,
       type: 'SET_USER_INFO',
     });
   };
 
   const onEditProfile = () => {
+    props.navigation.navigate('ProfileEdit');
+  };
 
-  }
-
-  console.log('111vvv', profile);
-  console.log('111vvv', accessToken);
+  const showNotify = () => {
+    Alert.alert('Notification', 'Do you want to log out', [
+      {text: 'Cancel', style: 'cancel'},
+      {text: 'OK', onPress: () => logOut()},
+    ]);
+  };
+  console.log('profile1', profile);
 
   useEffect(() => {
     if (accessToken) {
@@ -52,16 +57,17 @@ const Profile = () => {
   return (
     <>
       {profile ? (
+        // eslint-disable-next-line react-native/no-inline-styles
         <SafeAreaView style={{backgroundColor: '#fff'}}>
           <ImageBackground
             source={{uri: profile?.avatar}}
             style={styles.container}>
             <View style={styles.topContainer}>
-              <TouchableOpacity onPress={onEditProfile}>
+              <TouchableOpacity style={styles.btn} onPress={onEditProfile}>
                 <IconE
                   name="edit"
                   size={25}
-                  style={{marginLeft: width * 0.9, marginTop: 10}}
+                  // eslint-disable-next-line react-native/no-inline-styles
                 />
               </TouchableOpacity>
             </View>
@@ -69,12 +75,12 @@ const Profile = () => {
           <Image style={styles.avatar} source={{uri: profile?.avatar}} />
 
           <View>
-            <Text style={styles.text}>Thông tin đăng nhập</Text>
+            <Text style={styles.text}>Thông tin tài khoản</Text>
           </View>
 
           <View style={styles.bottomContainer}>
             <View style={styles.rowInfo}>
-              <Icon name="user" size={22} color="#F93C66" style={styles.icon} />
+              <Icon name="user" size={21} color="#F93C66" style={styles.icon} />
               <Text style={styles.textInfo}>{profile?.name}</Text>
             </View>
 
@@ -106,7 +112,7 @@ const Profile = () => {
             </View>
           </View>
 
-          <TouchableOpacity onPress={logOut} style={styles.cartContainer}>
+          <TouchableOpacity onPress={showNotify} style={styles.cartContainer}>
             <Text style={styles.cart}>Log Out</Text>
           </TouchableOpacity>
         </SafeAreaView>
@@ -147,9 +153,24 @@ const styles = StyleSheet.create({
     borderTopColor: '#DD9A89',
     borderTopWidth: 0.1,
     backgroundColor: '#fff',
-    paddingLeft: width * 0.3,
+    // paddingLeft: width * 0.3,
     height: height * 0.35,
+    alignSelf: 'center',
     justifyContent: 'center',
+  },
+
+  btn: {
+    alignSelf: 'flex-end',
+    marginRight: width * 0.025,
+    marginTop: width * 0.025,
+    width: 40,
+    height: 40,
+    backgroundColor: '#cecece',
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 10,
+    flexShrink: 0,
   },
 
   rowInfo: {

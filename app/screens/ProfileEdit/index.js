@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, Fragment} from 'react';
 import {
   View,
   StyleSheet,
@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import {Button} from 'react-native-elements';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Icon from 'react-native-vector-icons/AntDesign';
 import RadioForm from 'react-native-simple-radio-button';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
@@ -18,16 +18,28 @@ import * as yup from 'yup';
 import * as _ from 'lodash';
 import {useFormik} from 'formik';
 import ErrorText from '../../components/errorText';
-import {signUp} from '../../redux/actions';
+import {getProfile, updateProfile} from '../../redux/actions';
 import Toast from 'react-native-simple-toast';
 
 const {width, height} = Dimensions.get('window');
 
-const SignUp = (props) => {
+const ProfileEdit = (props) => {
   const dispatch = useDispatch();
   const {navigation} = props;
   let _textInputRef = useRef(null);
   const [isChoose, setIsChoose] = useState();
+  const accessToken = useSelector((state) =>
+    state.userInfo.data ? state.userInfo.data.content.accessToken : null,
+  );
+  const profile = useSelector((state) => state.userInfo.profile);
+
+  const [account, setAccount] = useState({
+    email: '',
+    password: '',
+    name: '',
+    gender: true,
+    phone: '',
+  });
 
   /**
    * Validate input sigin up
@@ -38,10 +50,6 @@ const SignUp = (props) => {
       .required('*Email bắt buộc nhập')
       .email('*Vui lòng nhập đúng email')
       .max(20, '*Email nhỏ hơn 20 kí tự '),
-    password: yup
-      .string()
-      .required('*Mật khẩu bắt buộc nhập')
-      .min(6, '*Passsword lớn hơn 5 kí tự'),
     name: yup
       .string()
       .required('*Tên bắt buộc nhập')
@@ -55,11 +63,11 @@ const SignUp = (props) => {
 
   const formik = useFormik({
     initialValues: {
-      email: '',
+      email: profile.email,
       password: '',
-      name: '',
+      name: profile.name,
       gender: true,
-      phone: '',
+      phone: profile.phone,
     },
     validationSchema: accountSchema,
     validateOnMount: true,
@@ -70,15 +78,27 @@ const SignUp = (props) => {
   };
 
   const handleSubmit = () => {
+    console.log('formik.errors', formik.errors);
+    console.log('body', body);
+
     if (!_.isEmpty(formik.errors)) {
       return;
     }
 
     const body = {...formik.values, gender: isChoose};
-    console.log('body', body);
 
-    dispatch(signUp(body));
-    Toast.show('Đăng kí tài khoản thành công.', 200, Toast.LONG, Toast.BOTTOM);
+    if (accessToken) {
+      dispatch(updateProfile(body, accessToken));
+      if (accessToken) {
+        dispatch(getProfile(accessToken));
+      }
+    }
+    Toast.show(
+      'Thay đổi thông tin tài khoản thành công.',
+      200,
+      Toast.LONG,
+      Toast.BOTTOM,
+    );
     handleGoBack();
   };
 
@@ -88,8 +108,21 @@ const SignUp = (props) => {
   ];
 
   useEffect(() => {
-    console.log('isChoose', isChoose);
-  }, [isChoose]);
+    if (accessToken) {
+      dispatch(getProfile(accessToken));
+    }
+  }, [accessToken]);
+
+  useEffect(() => {
+    setAccount({
+      ...account,
+      email: profile.email,
+      name: profile.name,
+      gender: profile.gender,
+      phone: profile.phone,
+    });
+    setIsChoose(profile.gender);
+  }, [profile.email, profile.gender, profile.name, profile.phone]);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -110,7 +143,10 @@ const SignUp = (props) => {
               {/* Email  */}
               <Text style={styles.label}>Email:</Text>
               <TextInput
+                selectTextOnFocus={false} // readonly
+                editable={false} //readonly
                 style={styles.formControl}
+                defaultValue={account.email}
                 placeholder="Nhập email"
                 placeholderTextColor="#bfb5b5"
                 keyboardType="default"
@@ -128,30 +164,10 @@ const SignUp = (props) => {
                 error={formik.errors.email}
               />
 
-              {/* Password */}
-              <Text style={styles.label}>Password:</Text>
-              <TextInput
-                style={styles.formControl}
-                placeholder="Nhập password "
-                placeholderTextColor="#bfb5b5"
-                keyboardType="default"
-                returnKeyType="next"
-                autoCapitalize="none" // tắt tự động viết hoa chữ cái đầu input
-                onChangeText={formik.handleChange('password')}
-                onBlur={formik.handleBlur('password')}
-                ref={(r) => {
-                  _textInputRef = r;
-                }}
-              />
-              <ErrorText
-                customStyle={styles.errTxt}
-                touched={formik.touched.password}
-                error={formik.errors.password}
-              />
-
               {/* Name  */}
               <Text style={styles.label}>Name:</Text>
               <TextInput
+                defaultValue={account.name}
                 style={styles.formControl}
                 placeholder="Nhập tên "
                 placeholderTextColor="#bfb5b5"
@@ -178,7 +194,7 @@ const SignUp = (props) => {
                   style={styles.radio}
                   labelStyle={styles.labelStyle}
                   radio_props={radio_props}
-                  initial={0}
+                  initial={profile?.gender ? 0 : 1}
                   formHorizontal={true}
                   onPress={(value) => {
                     setIsChoose(value);
@@ -190,6 +206,7 @@ const SignUp = (props) => {
               <Text style={styles.label}>Phone:</Text>
               <TextInput
                 style={styles.formControl}
+                defaultValue={account.phone}
                 placeholder="Nhập SĐT"
                 placeholderTextColor="#bfb5b5"
                 keyboardType="default"
@@ -210,7 +227,7 @@ const SignUp = (props) => {
 
               <View style={styles.containerBtn}>
                 <Button
-                  title="ĐĂNG KÍ"
+                  title="LƯU"
                   // eslint-disable-next-line react-native/no-inline-styles
                   buttonStyle={{...styles.btn, backgroundColor: '#F93C66'}}
                   onPress={handleSubmit}
@@ -320,4 +337,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUp;
+export default ProfileEdit;

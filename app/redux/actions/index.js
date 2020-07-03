@@ -14,16 +14,16 @@ export const createAction = (type, payload) => ({
   payload,
 });
 
+// create async action to fetch category from backend and save in redux store
+
+// const actFetchCategory = () => dispatch => {
+// }
+
 export const getCart = () => {
   return (dispatch) => {
     dispatch(createAction('GET_FROM_CART'));
   };
 };
-
-// create async action to fetch category from backend and save in redux store
-
-// const actFetchCategory = () => dispatch => {
-// }
 
 export const actFetchCategory = () => {
   //async action
@@ -130,12 +130,37 @@ export const getProfile = (auth) => {
       },
     })
       .then((res) => {
-        console.log('da goi');
         dispatch(createAction(GET_PROFILE, res.data.content));
       })
       .catch((err) => {
-        console.log('loi');
         console.log({...err});
       });
+  };
+};
+
+export const signUp = (account) => {
+  return (dispatch) => {
+    axios({
+      method: 'POST',
+      url: 'http://svcy3.myclass.vn/api/Users/signup',
+      data: account,
+    })
+      .then((res) => console.log('res', res))
+      .catch((err) => console.log('err', {...err}));
+  };
+};
+
+export const updateProfile = (account, auth) => {
+  return (dispatch) => {
+    axios({
+      method: 'POST',
+      url: 'http://svcy3.myclass.vn/api/Users/updateProfile',
+      data: account,
+      headers: {
+        Authorization: `Bearer ${auth}`,
+      },
+    })
+      .then((res) => getProfile(auth))
+      .catch((err) => console.log('err', {...err}));
   };
 };
