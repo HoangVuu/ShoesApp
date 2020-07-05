@@ -3,9 +3,11 @@ import {
   View,
   StyleSheet,
   Text,
+  ImageBackground,
   TouchableWithoutFeedback,
   Dimensions,
   Keyboard,
+  Fragment,
   AsyncStorage, // giống với local storage, chỉ lưu được string, chuỗi json
 } from 'react-native';
 import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
@@ -18,6 +20,9 @@ import {withNavigation} from '@react-navigation/compat';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {LoginButton, AccessToken} from 'react-native-fbsdk';
 import {loginWithFacebook} from '../../redux/actions';
+import Title from '../../components/title';
+import Bg from '../../assets/bg1.jpg';
+import LinearGradient from 'react-native-linear-gradient';
 
 const {width, height} = Dimensions.get('window');
 
@@ -28,10 +33,6 @@ const Signin = (props) => {
   const [account, setAccount] = useState({
     email: '',
     password: '',
-  });
-
-  const [fbToken, setFbToken] = useState({
-    facebookToken: '',
   });
 
   const handleChange = (key) => (val) => {
@@ -61,103 +62,117 @@ const Signin = (props) => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <KeyboardAwareScrollView
-        style={styles.container}
-        getTextInputRefs={() => {
-          return [_textInputRef];
-        }}>
-        <View style={styles.content}>
-          <View style={styles.form}>
-            <TextInput
-              style={styles.formControl}
-              placeholder="Tài khoản"
-              placeholderTextColor="#fff"
-              keyboardType="default"
-              returnKeyType="next"
-              autoCapitalize="none" // tắt tự động viết hoa chữ cái đầu input
-              onChangeText={handleChange('email')}
-              ref={(r) => {
-                _textInputRef = r;
-              }}
-            />
-            <TextInput
-              style={styles.formControl}
-              placeholder="Mật khẩu"
-              placeholderTextColor="#fff"
-              keyboardType="default"
-              returnKeyLabel="Submit"
-              secureTextEntry
-              autoCapitalize="none" // tắt tự động viết hoa chữ cái đầu input
-              returnKeyType="done"
-              onChangeText={handleChange('password')}
-              ref={(r) => {
-                _textInputRef = r;
-              }}
-            />
-            <Button
-              title="ĐĂNG NHẬP"
-              buttonStyle={styles.btn}
-              onPress={handleSubmit}
-            />
-            <View style={styles.signUpContainer}>
-              <Text
-                style={styles.textSignUpStart}
-                buttonStyle={styles.btn}
-                onPress={handleSubmit}>
-                Bạn chưa có tài khoản?
-              </Text>
-              <TouchableOpacity onPress={handlesignUp}>
-                <Text style={styles.textSignUpEnd}> Đăng kí</Text>
-              </TouchableOpacity>
-            </View>
-
-            {/* Login with Facebook */}
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginTop: 20,
-              }}>
-              <LoginButton
-                onLoginFinished={(error, result) => {
-                  if (error) {
-                    console.log('login has error: ' + result.error);
-                  } else if (result.isCancelled) {
-                    console.log('login is cancelled.');
-                  } else {
-                    AccessToken.getCurrentAccessToken().then((data) => {
-                      console.log(
-                        'data.accessToken.toString()',
-                        data.accessToken.toString(),
-                      );
-                      setFbToken({
-                        ...fbToken,
-                        facebookToken: data.accessToken.toString(),
-                      });
-
-                      console.log(
-                        'facebookToken sign in',
-                        fbToken.facebookToken,
-                      );
-                      fbToken && dispatch(loginWithFacebook(fbToken));
-                      // props.navigation.navigate('Profile');
-                    });
-                  }
-                }}
-                onLogoutFinished={() => console.log('logout.')}
+    <>
+      <ImageBackground source={Bg} style={styles.containerBg}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <KeyboardAwareScrollView
+            style={styles.container}
+            getTextInputRefs={() => {
+              return [_textInputRef];
+            }}>
+            <View style={styles.content}>
+              <Title
+                title=" ĐĂNG NHẬP"
+                customStyle={{fontSize: 35, color: '#fff'}}
               />
+
+              <View style={styles.form}>
+                <TextInput
+                  style={styles.formControl}
+                  placeholder="Tài khoản"
+                  placeholderTextColor="#fff"
+                  keyboardType="default"
+                  returnKeyType="next"
+                  autoCapitalize="none" // tắt tự động viết hoa chữ cái đầu input
+                  onChangeText={handleChange('email')}
+                  ref={(r) => {
+                    _textInputRef = r;
+                  }}
+                />
+                <TextInput
+                  style={styles.formControl}
+                  placeholder="Mật khẩu"
+                  placeholderTextColor="#fff"
+                  keyboardType="default"
+                  returnKeyLabel="Submit"
+                  secureTextEntry
+                  autoCapitalize="none" // tắt tự động viết hoa chữ cái đầu input
+                  returnKeyType="done"
+                  onChangeText={handleChange('password')}
+                  ref={(r) => {
+                    _textInputRef = r;
+                  }}
+                />
+                <Button
+                  title="ĐĂNG NHẬP"
+                  buttonStyle={styles.btn}
+                  onPress={handleSubmit}
+                />
+                <View style={styles.signUpContainer}>
+                  <Text
+                    style={styles.textSignUpStart}
+                    buttonStyle={styles.btn}
+                    onPress={handleSubmit}>
+                    Bạn chưa có tài khoản?
+                  </Text>
+                  <TouchableOpacity onPress={handlesignUp}>
+                    <Text style={styles.textSignUpEnd}> Đăng kí</Text>
+                  </TouchableOpacity>
+                </View>
+
+                {/* Login with Facebook */}
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginTop: 20,
+                  }}>
+                  <LoginButton
+                    onLoginFinished={(error, result) => {
+                      if (error) {
+                        console.log('login has error: ' + result.error);
+                      } else if (result.isCancelled) {
+                        console.log('login is cancelled.');
+                      } else {
+                        AccessToken.getCurrentAccessToken().then((data) => {
+                          console.log(
+                            'data.accessToken.toString()',
+                            data.accessToken.toString(),
+                          );
+                          // setFbToken({
+                          //   ...fbToken.facebookToken,
+                          //   facebookToken: data.accessToken.toString(),
+                          // });
+                          dispatch(
+                            loginWithFacebook({
+                              facebookToken: data.accessToken.toString(),
+                            }),
+                          );
+                        });
+                      }
+                    }}
+                    onLogoutFinished={() => console.log('logout.')}
+                  />
+                </View>
+              </View>
             </View>
-          </View>
-        </View>
-      </KeyboardAwareScrollView>
-    </TouchableWithoutFeedback>
+          </KeyboardAwareScrollView>
+        </TouchableWithoutFeedback>
+      </ImageBackground>
+      <LinearGradient colors={['#000', 'transparent']} style={styles.overlay} />
+    </>
   );
 };
 
 const styles = StyleSheet.create({
+  containerBg: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
   content: {
-    backgroundColor: 'gray',
+    width: width * 0.9,
     justifyContent: 'center',
     height: height * 0.9,
   },
@@ -185,6 +200,9 @@ const styles = StyleSheet.create({
   },
 
   signUpContainer: {
+    width: width,
+    backgroundColor: '#000',
+    padding: 10,
     marginTop: height * 0.02,
     display: 'flex',
     flexDirection: 'row',
@@ -193,11 +211,20 @@ const styles = StyleSheet.create({
 
   textSignUpStart: {
     // textAlign: 'center',
-    // color:'gray'
+    color: '#fff',
   },
 
   textSignUpEnd: {
-    color: '#134c7f',
+    color: '#DD9A89',
+  },
+
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: height * 0.35,
+    zIndex: 1,
   },
 });
 

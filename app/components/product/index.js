@@ -157,12 +157,12 @@ const Product = (props) => {
             <Icon name="heart" size={18} color="red" style={styles.shadow} />
           </View>
         ) : (
-          <Icon name="hearto" size={18} />
+          <Icon name="hearto" color="#fff" size={18} />
         )}
       </TouchableOpacity>
 
       <TouchableOpacity onPress={addToCart} style={styles.cart}>
-        <IconM name="add-shopping-cart" size={23} color="#F93C66" />
+        <IconM name="add-shopping-cart" size={23} color="#DD9A89" />
       </TouchableOpacity>
     </Animated.View>
   );
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   },
 
   productInfo: {
-    padding: 20,
+    padding: 18,
     height: 100,
   },
 
@@ -220,8 +220,8 @@ const styles = StyleSheet.create({
 
   cart: {
     position: 'absolute',
-    right: 10,
-    top: 26,
+    right: 7,
+    top: 32,
   },
 
   shadow: {

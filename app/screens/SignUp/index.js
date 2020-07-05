@@ -18,6 +18,8 @@ import * as yup from 'yup';
 import * as _ from 'lodash';
 import {useFormik} from 'formik';
 import ErrorText from '../../components/errorText';
+import Title from '../../components/title';
+
 import {signUp} from '../../redux/actions';
 import Toast from 'react-native-simple-toast';
 
@@ -106,6 +108,10 @@ const SignUp = (props) => {
         <View>
           {/* Form sign up  */}
           <View style={styles.content}>
+            <Title
+              title="ĐĂNG KÍ TÀI KHOẢN"
+              customStyle={{fontSize: 22, color: '#F93C66'}}
+            />
             <View style={styles.form}>
               {/* Email  */}
               <Text style={styles.label}>Email:</Text>

@@ -5,10 +5,11 @@ import {
   FETCH_PRODUCTS_BY_CATEGORY,
   FETCH_PRODUCT_BY_ID,
   FETCH_ALL_PRODUCTS,
-  LIKE_SHOES,
-  DISLIKE_SHOES,
+  // LIKE_SHOES,
+  // DISLIKE_SHOES,
   SET_USER_INFO,
   GET_PROFILE,
+  GET_ALL_STORES,
 } from './type';
 
 export const createAction = (type, payload) => ({
@@ -181,7 +182,7 @@ export const loginWithFacebook = (facebookToken) => {
 };
 
 export const updateAvatar = () => {
-  return (dispacth) => {
+  return () => {
     axios({
       method: 'POST',
       url: 'http://svcy3.myclass.vn/api/Users/uploadavatar',
@@ -190,5 +191,32 @@ export const updateAvatar = () => {
         console.log('upload anh');
       })
       .catch((err) => console.log('err anh', {...err}));
+  };
+};
+
+export const getAllStore = () => {
+  return (dispacth) => {
+    axios({
+      method: 'GET',
+      url: 'http://svcy3.myclass.vn/api/Product/getAllStore',
+    })
+      .then((res) => {
+        dispacth(createAction(GET_ALL_STORES, res.data.content));
+      })
+      .catch((err) => console.log({...err}));
+  };
+};
+
+export const changePassword = (newPass) => {
+  return () => {
+    axios({
+      method: 'POST',
+      url: 'http://svcy3.myclass.vn/api/Users/changePassword',
+      data: newPass,
+    })
+      .then((res) => {
+        console.log('res', newPass);
+      })
+      .catch((err) => console.log({...err}));
   };
 };

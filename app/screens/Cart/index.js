@@ -3,7 +3,7 @@ import {
   StyleSheet,
   Text,
   SafeAreaView,
-  Image,
+  Alert,
   Dimensions,
   View,
   ScrollView,
@@ -24,6 +24,21 @@ const Cart = () => {
   useEffect(() => {
     dispatch(getCart());
   });
+
+  const handleLoginrequest = () => {
+    Alert.alert(
+      'Yêu cầu đăng nhập',
+      'Bạn phải đăng nhập để sử dụng chức năng này',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ],
+      {cancelable: false},
+    );
+  };
 
   const getSum = () => {
     let sum = 0;
@@ -78,7 +93,9 @@ const Cart = () => {
           <Text style={styles.textTotal}>Total</Text>
           <Text style={styles.totalMoney}>${getTotal()}</Text>
         </View>
-        <TouchableOpacity style={styles.cartContainer}>
+        <TouchableOpacity
+          onPress={handleLoginrequest}
+          style={styles.cartContainer}>
           <Text style={styles.cart}>NEXT</Text>
         </TouchableOpacity>
       </View>

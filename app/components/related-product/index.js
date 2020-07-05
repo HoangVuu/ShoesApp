@@ -6,6 +6,7 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
+  Fragment,
 } from 'react-native';
 import {withNavigation} from '@react-navigation/compat';
 
@@ -23,6 +24,9 @@ const RelatedProduct = (props) => {
   return (
     item && (
       <TouchableOpacity onPress={goToDetail} style={styles.relatedContainer}>
+        <View style={styles.tagContainer}>
+          <Text style={styles.textTag}>NEW</Text>
+        </View>
         <Image
           resizeMode="contain"
           style={styles.relatedImg}
@@ -37,6 +41,7 @@ const RelatedProduct = (props) => {
 
 const styles = StyleSheet.create({
   relatedContainer: {
+    position: 'relative',
     marginLeft: 20,
     alignItems: 'center',
     width: width * 0.4,
@@ -56,6 +61,20 @@ const styles = StyleSheet.create({
 
   relatedPrice: {
     marginBottom: 10,
+  },
+
+  tagContainer: {
+    position: 'absolute',
+    width: width * 0.25,
+    backgroundColor: '#F93C66',
+    transform: [{rotate: '-90deg'}],
+    top: 25,
+    right: width * 0.23,
+  },
+
+  textTag: {
+    color: '#fff',
+    textAlign: 'center',
   },
 });
 

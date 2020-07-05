@@ -11,6 +11,7 @@ import {
   AsyncStorage,
   Alert,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {getProfile, updateAvatar} from '../../redux/actions';
@@ -19,6 +20,7 @@ import IconF from 'react-native-vector-icons/FontAwesome';
 import IconE from 'react-native-vector-icons/Entypo';
 import Signin from '../Signin';
 import ImagePicker from 'react-native-image-picker';
+import {Button} from 'react-native-elements';
 
 const {width, height} = Dimensions.get('window');
 
@@ -82,6 +84,10 @@ const Profile = (props) => {
     props.navigation.navigate('ProfileEdit');
   };
 
+  const changePassword = () => {
+    props.navigation.navigate('ChangePassword');
+  };
+
   const showNotify = () => {
     Alert.alert('Notification', 'Do you want to log out', [
       {text: 'Cancel', style: 'cancel'},
@@ -96,8 +102,17 @@ const Profile = (props) => {
     }
   }, [accessToken]);
 
+  const renderLoading = () => {
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color="#517ad5" />
+      </View>
+    );
+  };
+
   return (
     <>
+      {/* {!profile ? renderLoading() : null} */}
       {profile ? (
         // eslint-disable-next-line react-native/no-inline-styles
         <SafeAreaView style={{backgroundColor: '#fff'}}>
@@ -105,7 +120,7 @@ const Profile = (props) => {
             source={{uri: profile?.avatar}}
             style={styles.container}>
             <View style={styles.topContainer}>
-              <TouchableOpacity style={styles.btn} onPress={onEditProfile}>
+              <TouchableOpacity style={styles.btnEdit} onPress={onEditProfile}>
                 <IconE
                   name="edit"
                   size={25}
@@ -130,7 +145,7 @@ const Profile = (props) => {
 
           <View style={styles.bottomContainer}>
             <View style={styles.rowInfo}>
-              <Icon name="user" size={21} color="#F93C66" style={styles.icon} />
+              <Icon name="user" size={20} color="#F93C66" style={styles.icon} />
               <Text style={styles.textInfo}>{profile?.name}</Text>
             </View>
 
@@ -162,9 +177,24 @@ const Profile = (props) => {
             </View>
           </View>
 
-          <TouchableOpacity onPress={showNotify} style={styles.cartContainer}>
-            <Text style={styles.cart}>Log Out</Text>
-          </TouchableOpacity>
+          <View style={styles.containerBtn}>
+            <Button
+              title="ĐĂNG XUẤT"
+              // eslint-disable-next-line react-native/no-inline-styles
+              buttonStyle={{...styles.btn, backgroundColor: '#F93C66'}}
+              onPress={showNotify}
+            />
+
+            <Button
+              title="ĐỔI MẬT KHẨU"
+              // eslint-disable-next-line react-native/no-inline-styles
+              buttonStyle={{
+                ...styles.btn,
+                backgroundColor: '#517ad5',
+              }}
+              onPress={changePassword}
+            />
+          </View>
         </SafeAreaView>
       ) : (
         <Signin />
@@ -176,6 +206,12 @@ const Profile = (props) => {
 export default Profile;
 
 const styles = StyleSheet.create({
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   container: {
     width: width,
   },
@@ -207,17 +243,16 @@ const styles = StyleSheet.create({
   },
 
   bottomContainer: {
-    width: width * 0.7,
+    maxWidth: width * 0.7,
     borderTopColor: '#DD9A89',
     borderTopWidth: 0.1,
     backgroundColor: '#fff',
-    // paddingLeft: width * 0.3,
     height: height * 0.35,
     alignSelf: 'center',
     justifyContent: 'center',
   },
 
-  btn: {
+  btnEdit: {
     alignSelf: 'flex-end',
     marginRight: width * 0.025,
     marginTop: width * 0.025,
@@ -235,6 +270,7 @@ const styles = StyleSheet.create({
     paddingVertical: height * 0.02,
     display: 'flex',
     flexDirection: 'row',
+    // justifyContent: 'space-between',
   },
 
   textInfo: {
@@ -255,27 +291,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
 
-  cartContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F93C66',
-    width: width * 0.8,
-    height: height * 0.06,
-    borderRadius: 8,
-    marginBottom: 20,
-  },
-
-  cart: {
-    color: '#fff',
-    textTransform: 'uppercase',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-
   text: {
+    fontWeight: 'bold',
     color: '#F93C66',
     borderBottomColor: '#F93C66',
     paddingBottom: 10,
@@ -286,7 +303,19 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: '#fff',
     fontSize: 20,
-    fontWeight: '600',
     marginTop: 0.02 * width,
+  },
+
+  containerBtn: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: width * 0.05,
+  },
+
+  btn: {
+    backgroundColor: '#F93C66',
+    height: height * 0.07,
+    width: width * 0.43,
+    borderRadius: 15,
   },
 });

@@ -16,6 +16,7 @@ import {useDispatch} from 'react-redux';
 import {createAction} from '../redux/actions';
 import {SET_USER_INFO} from '../redux/actions/type';
 import ProfileEdit from '../screens/ProfileEdit';
+import ChangePassword from '../screens/ChangePassword';
 
 const Tabs = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -98,7 +99,7 @@ const AppContainer = () => {
       <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name="index" component={BottomTab} />
         <Stack.Screen name="ProductDetail" component={ProductDetail} />
-        <Stack.Screen name="Category" component={Category} />
+        <Stack.Screen name="ChangePassword" component={ChangePassword} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="ProfileEdit" component={ProfileEdit} />
       </Stack.Navigator>
