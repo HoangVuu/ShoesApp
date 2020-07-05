@@ -12,9 +12,10 @@ import Home from '../screens/Home';
 import Favorites from '../screens/Favorites';
 import Category from '../screens/Category';
 import Icon from 'react-native-vector-icons/AntDesign';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {createAction} from '../redux/actions';
 import {SET_USER_INFO} from '../redux/actions/type';
+import ProfileEdit from '../screens/ProfileEdit';
 
 const Tabs = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -38,8 +39,9 @@ const AppContainer = () => {
         initialRouteName="Home"
         tabBarOptions={{
           showLabel: false,
-          activeTintColor: 'red',
+          activeTintColor: '#F93C66',
           inactiveTintColor: '#333333',
+          keyboardHidesTabBar: true,
         }}>
         <Tabs.Screen
           name="Home"
@@ -98,6 +100,7 @@ const AppContainer = () => {
         <Stack.Screen name="ProductDetail" component={ProductDetail} />
         <Stack.Screen name="Category" component={Category} />
         <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="ProfileEdit" component={ProfileEdit} />
       </Stack.Navigator>
     </NavigationContainer>
   );

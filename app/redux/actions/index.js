@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {AsyncStorage} from 'react-native'; // giống với local storage, chỉ lưu được string, chuỗi json
 import {
   FETCH_CATEGORY,
   FETCH_PRODUCTS_BY_CATEGORY,
@@ -6,6 +7,7 @@ import {
   FETCH_ALL_PRODUCTS,
   LIKE_SHOES,
   DISLIKE_SHOES,
+  SET_USER_INFO,
   GET_PROFILE,
 } from './type';
 
@@ -14,16 +16,16 @@ export const createAction = (type, payload) => ({
   payload,
 });
 
+// create async action to fetch category from backend and save in redux store
+
+// const actFetchCategory = () => dispatch => {
+// }
+
 export const getCart = () => {
   return (dispatch) => {
     dispatch(createAction('GET_FROM_CART'));
   };
 };
-
-// create async action to fetch category from backend and save in redux store
-
-// const actFetchCategory = () => dispatch => {
-// }
 
 export const actFetchCategory = () => {
   //async action
@@ -130,12 +132,70 @@ export const getProfile = (auth) => {
       },
     })
       .then((res) => {
-        console.log('da goi');
+        console.log('res.data', res.data);
         dispatch(createAction(GET_PROFILE, res.data.content));
       })
       .catch((err) => {
-        console.log('loi');
         console.log({...err});
       });
+  };
+};
+
+export const signUp = (account) => {
+  return () => {
+    axios({
+      method: 'POST',
+      url: 'http://svcy3.myclass.vn/api/Users/signup',
+      data: account,
+    })
+      .then((res) => console.log('res', res))
+      .catch((err) => console.log('err', {...err}));
+  };
+};
+
+export const updateProfile = (account, auth) => {
+  return () => {
+    axios({
+      method: 'POST',
+      url: 'http://svcy3.myclass.vn/api/Users/updateProfile',
+      data: account,
+      headers: {
+        Authorization: `Bearer ${auth}`,
+      },
+    })
+      .then((res) => getProfile(auth))
+      .catch((err) => console.log('err', {...err}));
+  };
+};
+
+export const loginWithFacebook = (facebookToken) => {
+  return (dispacth) => {
+    axios({
+      method: 'POST',
+      url: 'http://svcy3.myclass.vn/api/Users/facebooklogin',
+      data: facebookToken,
+    })
+      .then((res) => {
+        console.log('fbToken', facebookToken);
+        console.log('chay roi', res.data);
+        AsyncStorage.setItem('userInfo', JSON.stringify(res.data));
+        AsyncStorage.setItem('accessToken', res.data.accessToken);
+        dispacth(createAction(SET_USER_INFO, JSON.stringify(res.data)));
+        // getProfile(res.data.content.accessToken);
+      })
+      .catch((err) => console.log('err', {...err}));
+  };
+};
+
+export const updateAvatar = () => {
+  return (dispacth) => {
+    axios({
+      method: 'POST',
+      url: 'http://svcy3.myclass.vn/api/Users/uploadavatar',
+    })
+      .then((res) => {
+        console.log('upload anh');
+      })
+      .catch((err) => console.log('err anh', {...err}));
   };
 };

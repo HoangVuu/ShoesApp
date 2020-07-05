@@ -42,8 +42,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginLeft: 10,
-    flexShrink: 0 // 0 - header nhiều text đẩy ra thì btn sẽ ko thu lại để vừa, vẫn giữ nguyên kích thước 
-                  // 1-  header nhiều text đẩy ra thì btn sẽ  thu lại để vừa kích thước
+    flexShrink: 0,
+    // 0 - header nhiều text đẩy ra thì btn sẽ ko thu lại để vừa, vẫn giữ nguyên kích thước
+    // 1-  header nhiều text đẩy ra thì btn sẽ  thu lại để vừa kích thước
   },
 
   btnContainer: {

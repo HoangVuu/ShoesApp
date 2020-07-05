@@ -44,7 +44,7 @@ const Stores = () => {
       },
     );
   }, []);
-  
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <MapView

@@ -43,32 +43,35 @@ const Cart = () => {
         <Text style={styles.textHeader}>My Cart</Text>
         <Text style={styles.total}> Total {getSum()} items</Text>
       </View>
-
       {/* Scroll list cart */}
-      <ScrollView style={styles.scrollContainer}>
-        {/* <TouchableOpacity>
+      {/* <TouchableOpacity>
           <Icon style={styles.btnBack} name="arrowleft" size={25} />
         </TouchableOpacity> */}
-        {/* List of Cart */}
-        <FlatList
-          style={{backgroundColor: '#f5f5f5', marginTop: 5}}
-          data={cartList}
-          removeClippedSubviews
-          renderItem={({item}) => {
-            return (
-              <TouchableOpacity style={styles.info}>
-                <CartItem key={item.product.id} card={item} />
-              </TouchableOpacity>
-            );
-          }}
-          keyExtractor={(item, index) => index}
-        />
-        {/* <View style={{alignItems: 'center', marginTop:20}}>
-            <Text style={{color: '#847d7d'}}>
-              Giỏ hàng của bạn đang trống, vui lòng chọn thêm
-            </Text>
-          </View> */}
-      </ScrollView>
+      {/* List of Cart */}
+      {cartList.length ? (
+        <ScrollView style={styles.scrollContainer}>
+          <FlatList
+            style={{backgroundColor: '#f5f5f5', marginTop: 5}}
+            data={cartList}
+            removeClippedSubviews
+            renderItem={({item}) => {
+              return (
+                <TouchableOpacity style={styles.info}>
+                  <CartItem key={item.product.id} card={item} />
+                </TouchableOpacity>
+              );
+            }}
+            keyExtractor={(item, index) => index}
+          />
+        </ScrollView>
+      ) : (
+        <View style={styles.emptyContainer}>
+          <Text style={{color: '#847d7d'}}>
+            Giỏ hàng của bạn đang trống, vui lòng chọn giày
+          </Text>
+        </View>
+      )}
+
       {/* Next  */}
       <View>
         <View style={styles.headerContainer}>
@@ -144,5 +147,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginRight: 15,
     fontSize: 28,
+  },
+
+  emptyContainer: {
+    alignItems: 'center',
+    marginTop: 20,
+    height: height * 0.54,
   },
 });
