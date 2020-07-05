@@ -30,7 +30,7 @@ const Signin = (props) => {
     password: '',
   });
 
-  const [facebookToken, setFacebookToken] = useState({
+  const [fbToken, setFbToken] = useState({
     facebookToken: '',
   });
 
@@ -127,18 +127,21 @@ const Signin = (props) => {
                     console.log('login is cancelled.');
                   } else {
                     AccessToken.getCurrentAccessToken().then((data) => {
-                      setFacebookToken({
-                        ...facebookToken.facebookToken,
-                        facebookToken: data.accessToken.toString(),
-                      });
                       console.log(
                         'data.accessToken.toString()',
                         data.accessToken.toString(),
                       );
-                      console.log('facebookToken sign in', facebookToken);
-                      facebookToken &&
-                        dispatch(loginWithFacebook(facebookToken));
-                      props.navigation.navigate('Profile');
+                      setFbToken({
+                        ...fbToken,
+                        facebookToken: data.accessToken.toString(),
+                      });
+
+                      console.log(
+                        'facebookToken sign in',
+                        fbToken.facebookToken,
+                      );
+                      fbToken && dispatch(loginWithFacebook(fbToken));
+                      // props.navigation.navigate('Profile');
                     });
                   }
                 }}

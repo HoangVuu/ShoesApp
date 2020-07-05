@@ -17,7 +17,7 @@ import {likeProduct, dislikeProduct} from '../../redux/actions';
 
 const Product = (props) => {
   const dispatch = useDispatch();
-  const [isLove, setIsLove] = useState(false);
+  const [isLove, setIsLove] = useState(true);
   const {item, isCurrent} = props;
   const [flipAnim] = useState(new Animated.Value(0));
   const [widthAnim] = useState(new Animated.Value(160));
@@ -26,6 +26,12 @@ const Product = (props) => {
   const categories = JSON.parse(JSON.stringify(item.categories));
 
   const userInfo = useSelector((state) => state.userInfo);
+
+  const accessToken = useSelector((state) =>
+    state.userInfo?.data?.content
+      ? state.userInfo.data.content.accessToken
+      : null,
+  );
 
   const addToCart = () => {
     // send request add to cart
@@ -41,14 +47,12 @@ const Product = (props) => {
     });
   };
 
-  useEffect(() => {
-    isLove
-      ? dispatch(likeProduct(item.id, userInfo?.data?.content?.accessToken))
-      : dispatch(dislikeProduct(item.id, userInfo?.data?.content?.accessToken));
-  }, [isLove]);
-
   const handleFavorite = () => {
     setIsLove(!isLove);
+    console.log('love', isLove);
+    isLove
+      ? dispatch(likeProduct(item.id, accessToken))
+      : dispatch(dislikeProduct(item.id, accessToken));
   };
 
   const handleLoginrequest = () => {
@@ -67,6 +71,9 @@ const Product = (props) => {
   };
 
   useEffect(() => {
+    if (userInfo) {
+      console.log('userInfo', userInfo);
+    }
     if (isCurrent) {
       //make animation
       Animated.timing(widthAnim, {
@@ -145,7 +152,7 @@ const Product = (props) => {
       <TouchableOpacity
         style={styles.favorite}
         onPress={userInfo?.isLogin ? handleFavorite : handleLoginrequest}>
-        {isLove ? (
+        {!isLove ? (
           <View>
             <Icon name="heart" size={18} color="red" style={styles.shadow} />
           </View>
