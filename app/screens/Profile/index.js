@@ -10,23 +10,65 @@ import {
   ImageBackground,
   AsyncStorage,
   Alert,
+  Platform,
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import {getProfile} from '../../redux/actions';
+import {getProfile, updateAvatar} from '../../redux/actions';
 import Icon from 'react-native-vector-icons/AntDesign';
 import IconF from 'react-native-vector-icons/FontAwesome';
 import IconE from 'react-native-vector-icons/Entypo';
 import Signin from '../Signin';
+import ImagePicker from 'react-native-image-picker';
 
 const {width, height} = Dimensions.get('window');
 
 const Profile = (props) => {
   const dispatch = useDispatch();
   const accessToken = useSelector((state) =>
-    state.userInfo.data ? state.userInfo.data.content.accessToken : null,
+    state.userInfo?.data?.content
+      ? state.userInfo.data.content.accessToken
+      : null,
   );
-
   const profile = useSelector((state) => state.userInfo.profile);
+
+  const options = {
+    title: 'Select Avatar',
+    storageOptions: {
+      skipBackup: true,
+      path: 'images',
+    },
+  };
+
+  const pickImage = () => {
+    ImagePicker.showImagePicker(options, (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        // Lấy đường dẫn path ảnh trong điện thoại
+        const uploadUri =
+          Platform.OS === 'ios'
+            ? response.uri.replace('file://', '')
+            : 'file://' + response.path;
+        const sourceImg = {
+          uri: uploadUri,
+          name: 'img.jpg',
+          type: 'img/jpg',
+        };
+
+        // Nếu muốn gửi file lên server thông qua axios thì phải tạo 1 form data
+        const data = new FormData();
+        data.append('file', sourceImg);
+        data.append('upload_preset', 'vule123');
+        console.log('sourceImg', sourceImg);
+        // Call Axios, data chính là data đã tạo ra từ formData ở trên
+        // dispatch(updateAvatar());
+      }
+    });
+  };
 
   const logOut = () => {
     AsyncStorage.removeItem('userInfo');
@@ -73,6 +115,14 @@ const Profile = (props) => {
             </View>
           </ImageBackground>
           <Image style={styles.avatar} source={{uri: profile?.avatar}} />
+          <TouchableOpacity
+            title="Pick image"
+            type="solid"
+            buttonStyle={styles.imgBtn}
+            onPress={pickImage}
+            style={styles.editAva}>
+            <Icon name="camera" size={22} />
+          </TouchableOpacity>
 
           <View>
             <Text style={styles.text}>Thông tin tài khoản</Text>
@@ -127,8 +177,7 @@ export default Profile;
 
 const styles = StyleSheet.create({
   container: {
-    // alignItems: 'center',
-    // justifyContent: 'center',
+    width: width,
   },
 
   topContainer: {
@@ -141,6 +190,7 @@ const styles = StyleSheet.create({
   },
 
   avatar: {
+    zIndex: 1,
     position: 'absolute',
     borderRadius: width * 0.12,
     height: width * 0.24,
@@ -149,7 +199,15 @@ const styles = StyleSheet.create({
     marginTop: height * 0.2,
   },
 
+  editAva: {
+    marginLeft: 0.1 * width,
+    marginTop: height * 0.2,
+    zIndex: 2,
+    position: 'absolute',
+  },
+
   bottomContainer: {
+    width: width * 0.7,
     borderTopColor: '#DD9A89',
     borderTopWidth: 0.1,
     backgroundColor: '#fff',

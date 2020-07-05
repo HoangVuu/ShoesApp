@@ -9,6 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import IconF from 'react-native-vector-icons/FontAwesome';
+import IconM from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {withNavigation} from '@react-navigation/compat';
 import {useSelector, useDispatch} from 'react-redux';
@@ -121,18 +122,6 @@ const Product = (props) => {
         // opacity: fadeAnim,
         // transform: [{translateY: slideAnim}],
       }}>
-      {/* <View
-          style={{
-            backgroundColor: 'red',
-            alignSelf: 'center',
-            borderRadius: 20,
-            width: '75%',
-            height: 30,
-            justifyContent: 'center',
-          }}>
-          <Text style={{textAlign: 'center', color: 'white'}}>ADD TO CART</Text>
-        </View> */}
-
       <View style={styles.productInfo}>
         <Text style={styles.productCat}>{item.categories[0].category}</Text>
         <Text style={styles.productName}>
@@ -166,7 +155,7 @@ const Product = (props) => {
       </TouchableOpacity>
 
       <TouchableOpacity onPress={addToCart} style={styles.cart}>
-        <IconF name="cart-plus" size={23} />
+        <IconM name="add-shopping-cart" size={23} color="#F93C66" />
       </TouchableOpacity>
     </Animated.View>
   );

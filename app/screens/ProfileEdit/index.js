@@ -49,7 +49,7 @@ const ProfileEdit = (props) => {
       .string()
       .required('*Email bắt buộc nhập')
       .email('*Vui lòng nhập đúng email')
-      .max(20, '*Email nhỏ hơn 20 kí tự '),
+      .max(40, '*Email nhỏ hơn 40 kí tự '),
     name: yup
       .string()
       .required('*Tên bắt buộc nhập')
@@ -78,8 +78,6 @@ const ProfileEdit = (props) => {
   };
 
   const handleSubmit = () => {
-    console.log('formik.errors', formik.errors);
-    console.log('body', body);
 
     if (!_.isEmpty(formik.errors)) {
       return;

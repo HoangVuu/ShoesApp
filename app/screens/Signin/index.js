@@ -2,7 +2,6 @@ import React, {useState, useRef} from 'react';
 import {
   View,
   StyleSheet,
-  Image,
   Text,
   TouchableWithoutFeedback,
   Dimensions,
@@ -18,15 +17,21 @@ import {SET_USER_INFO} from '../../redux/actions/type';
 import {withNavigation} from '@react-navigation/compat';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {LoginButton, AccessToken} from 'react-native-fbsdk';
+import {loginWithFacebook} from '../../redux/actions';
 
 const {width, height} = Dimensions.get('window');
 
 const Signin = (props) => {
   const dispatch = useDispatch();
   let _textInputRef = useRef(null);
+
   const [account, setAccount] = useState({
     email: '',
     password: '',
+  });
+
+  const [facebookToken, setFacebookToken] = useState({
+    facebookToken: '',
   });
 
   const handleChange = (key) => (val) => {
@@ -108,7 +113,12 @@ const Signin = (props) => {
             </View>
 
             {/* Login with Facebook */}
-            <View style={{justifyContent:'center', alignItems:'center', marginTop: 20}}>
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: 20,
+              }}>
               <LoginButton
                 onLoginFinished={(error, result) => {
                   if (error) {
@@ -117,7 +127,17 @@ const Signin = (props) => {
                     console.log('login is cancelled.');
                   } else {
                     AccessToken.getCurrentAccessToken().then((data) => {
-                      console.log(data.accessToken.toString());
+                      setFacebookToken({
+                        ...facebookToken.facebookToken,
+                        facebookToken: data.accessToken.toString(),
+                      });
+                      console.log(
+                        'data.accessToken.toString()',
+                        data.accessToken.toString(),
+                      );
+                      console.log('facebookToken sign in', facebookToken);
+                      facebookToken &&
+                        dispatch(loginWithFacebook(facebookToken));
                       props.navigation.navigate('Profile');
                     });
                   }
@@ -136,7 +156,7 @@ const styles = StyleSheet.create({
   content: {
     backgroundColor: 'gray',
     justifyContent: 'center',
-    height: height,
+    height: height * 0.9,
   },
 
   logo: {
