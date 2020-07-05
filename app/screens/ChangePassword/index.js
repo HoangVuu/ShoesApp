@@ -19,16 +19,15 @@ import * as _ from 'lodash';
 import {useFormik} from 'formik';
 import ErrorText from '../../components/errorText';
 import Title from '../../components/title';
-import {getProfile, updateProfile} from '../../redux/actions';
+import {getProfile, changePassword} from '../../redux/actions';
 import Toast from 'react-native-simple-toast';
 
 const {width, height} = Dimensions.get('window');
 
-const ProfileEdit = (props) => {
+const ChangePassword = (props) => {
   const dispatch = useDispatch();
   const {navigation} = props;
   let _textInputRef = useRef(null);
-  const [isChoose, setIsChoose] = useState();
   const accessToken = useSelector((state) =>
     state.userInfo.data ? state.userInfo.data.content.accessToken : null,
   );
@@ -36,10 +35,7 @@ const ProfileEdit = (props) => {
 
   const [account, setAccount] = useState({
     email: '',
-    password: '',
-    name: '',
-    gender: true,
-    phone: '',
+    newPassword: '',
   });
 
   /**
@@ -49,50 +45,44 @@ const ProfileEdit = (props) => {
     email: yup
       .string()
       .required('*Email bắt buộc nhập')
-      .email('*Vui lòng nhập đúng email')
+      // .email('*Vui lòng nhập đúng email')
       .max(40, '*Email nhỏ hơn 40 kí tự '),
-    name: yup
+    newPassword: yup
       .string()
-      .required('*Tên bắt buộc nhập')
-      .max(15, '*Tên nhỏ hơn 20 kí tự'),
-    phone: yup
-      .string()
-      .required('*Số điện thoại bắt buộc nhập')
-      .max(10, '*Số điẹn thoại phải là 10 chữ số')
-      .min(10, '*Số điẹn thoại phải là 10 chữ số'),
+      .required('*Mật khẩu bắt buộc nhập')
+      .min(5, '*Mật khẩu phải lớn hơn 6 kí tự'),
   });
 
   const formik = useFormik({
     initialValues: {
       email: profile.email,
-      password: '',
-      name: profile.name,
-      gender: true,
-      phone: profile.phone,
+      newPassword: '',
     },
     validationSchema: accountSchema,
     validateOnMount: true,
   });
 
+  /**
+   * Handle go back previous screen
+   */
   const handleGoBack = () => {
     navigation.goBack();
   };
 
+  /**
+   * Handle submit form
+   */
   const handleSubmit = () => {
     if (!_.isEmpty(formik.errors)) {
       return;
     }
 
-    const body = {...formik.values, gender: isChoose};
+    const body = {...formik.values};
+    console.log('body', body);
+    dispatch(changePassword(body));
 
-    if (accessToken) {
-      dispatch(updateProfile(body, accessToken));
-      // if (accessToken) {
-      //   dispatch(getProfile(accessToken));
-      // }
-    }
     Toast.show(
-      'Thay đổi thông tin tài khoản thành công.',
+      'Cập nhập mật khẩu tài khoản thành công.',
       200,
       Toast.LONG,
       Toast.BOTTOM,
@@ -100,27 +90,19 @@ const ProfileEdit = (props) => {
     handleGoBack();
   };
 
-  var radio_props = [
-    {label: 'Nam', value: true},
-    {label: 'Nữ', value: false},
-  ];
-
   useEffect(() => {
     if (accessToken) {
       dispatch(getProfile(accessToken));
     }
-  }, [accessToken]);
+  }, []);
 
   useEffect(() => {
     setAccount({
       ...account,
       email: profile.email,
-      name: profile.name,
-      gender: profile.gender,
-      phone: profile.phone,
+      newPassword: profile.newPassword,
     });
-    setIsChoose(profile.gender);
-  }, [profile.email, profile.gender, profile.name, profile.phone]);
+  }, [profile.email, profile.newPassword]);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -135,7 +117,7 @@ const ProfileEdit = (props) => {
         </TouchableOpacity>
 
         <Title
-          title="CHỈNH SỬA THÔNG TIN"
+          title="THAY ĐỔI MẬT KHẨU"
           customStyle={{fontSize: 22, color: '#F93C66'}}
         />
 
@@ -168,64 +150,25 @@ const ProfileEdit = (props) => {
               />
 
               {/* Name  */}
-              <Text style={styles.label}>Name:</Text>
+              <Text style={styles.label}>New Password:</Text>
               <TextInput
-                defaultValue={account.name}
+                defaultValue={account.newPassword}
                 style={styles.formControl}
-                placeholder="Nhập tên "
+                placeholder="Nhập mật khẩu mới"
                 placeholderTextColor="#bfb5b5"
                 autoCapitalize="none" // tắt tự động viết hoa chữ cái đầu input
                 keyboardType="default"
                 returnKeyType="next"
-                onChangeText={formik.handleChange('name')}
-                onBlur={formik.handleBlur('name')}
+                onChangeText={formik.handleChange('newPassword')}
+                onBlur={formik.handleBlur('newPassword')}
                 ref={(r) => {
                   _textInputRef = r;
                 }}
               />
               <ErrorText
                 customStyle={styles.errTxt}
-                touched={formik.touched.name}
-                error={formik.errors.name}
-              />
-
-              {/* Gender  */}
-              <View style={styles.genderContainer}>
-                <RadioForm
-                  buttonColor={'#000'}
-                  selectedButtonColor={'#F93C66'}
-                  style={styles.radio}
-                  labelStyle={styles.labelStyle}
-                  radio_props={radio_props}
-                  initial={profile?.gender ? 0 : 1}
-                  formHorizontal={true}
-                  onPress={(value) => {
-                    setIsChoose(value);
-                  }}
-                />
-              </View>
-
-              {/* Phone  */}
-              <Text style={styles.label}>Phone:</Text>
-              <TextInput
-                style={styles.formControl}
-                defaultValue={account.phone}
-                placeholder="Nhập SĐT"
-                placeholderTextColor="#bfb5b5"
-                keyboardType="default"
-                returnKeyLabel="Submit"
-                autoCapitalize="none" // tắt tự động viết hoa chữ cái đầu input
-                returnKeyType="done"
-                onChangeText={formik.handleChange('phone')}
-                onBlur={formik.handleBlur('phone')}
-                ref={(r) => {
-                  _textInputRef = r;
-                }}
-              />
-              <ErrorText
-                customStyle={styles.errTxt}
-                touched={formik.touched.phone}
-                error={formik.errors.phone}
+                touched={formik.touched.newPassword}
+                error={formik.errors.newPassword}
               />
 
               <View style={styles.containerBtn}>
@@ -340,4 +283,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileEdit;
+export default ChangePassword;

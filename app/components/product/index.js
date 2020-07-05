@@ -17,7 +17,7 @@ import {likeProduct, dislikeProduct} from '../../redux/actions';
 
 const Product = (props) => {
   const dispatch = useDispatch();
-  const [isLove, setIsLove] = useState(false);
+  const [isLove, setIsLove] = useState(true);
   const {item, isCurrent} = props;
   const [flipAnim] = useState(new Animated.Value(0));
   const [widthAnim] = useState(new Animated.Value(160));
@@ -26,6 +26,12 @@ const Product = (props) => {
   const categories = JSON.parse(JSON.stringify(item.categories));
 
   const userInfo = useSelector((state) => state.userInfo);
+
+  const accessToken = useSelector((state) =>
+    state.userInfo?.data?.content
+      ? state.userInfo.data.content.accessToken
+      : null,
+  );
 
   const addToCart = () => {
     // send request add to cart
@@ -41,14 +47,12 @@ const Product = (props) => {
     });
   };
 
-  useEffect(() => {
-    isLove
-      ? dispatch(likeProduct(item.id, userInfo?.data?.content?.accessToken))
-      : dispatch(dislikeProduct(item.id, userInfo?.data?.content?.accessToken));
-  }, [isLove]);
-
   const handleFavorite = () => {
     setIsLove(!isLove);
+    console.log('love', isLove);
+    isLove
+      ? dispatch(likeProduct(item.id, accessToken))
+      : dispatch(dislikeProduct(item.id, accessToken));
   };
 
   const handleLoginrequest = () => {
@@ -67,6 +71,9 @@ const Product = (props) => {
   };
 
   useEffect(() => {
+    if (userInfo) {
+      console.log('userInfo', userInfo);
+    }
     if (isCurrent) {
       //make animation
       Animated.timing(widthAnim, {
@@ -145,17 +152,17 @@ const Product = (props) => {
       <TouchableOpacity
         style={styles.favorite}
         onPress={userInfo?.isLogin ? handleFavorite : handleLoginrequest}>
-        {isLove ? (
+        {!isLove ? (
           <View>
             <Icon name="heart" size={18} color="red" style={styles.shadow} />
           </View>
         ) : (
-          <Icon name="hearto" size={18} />
+          <Icon name="hearto" color="#fff" size={18} />
         )}
       </TouchableOpacity>
 
       <TouchableOpacity onPress={addToCart} style={styles.cart}>
-        <IconM name="add-shopping-cart" size={23} color="#F93C66" />
+        <IconM name="add-shopping-cart" size={23} color="#DD9A89" />
       </TouchableOpacity>
     </Animated.View>
   );
@@ -170,7 +177,7 @@ const styles = StyleSheet.create({
   },
 
   productInfo: {
-    padding: 20,
+    padding: 18,
     height: 100,
   },
 
@@ -213,8 +220,8 @@ const styles = StyleSheet.create({
 
   cart: {
     position: 'absolute',
-    right: 10,
-    top: 26,
+    right: 7,
+    top: 32,
   },
 
   shadow: {

@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {actFetchDetail} from '../../redux/actions';
@@ -20,6 +21,7 @@ const {width, height} = Dimensions.get('window');
 
 const ProductDetail = (props) => {
   const [isSelected, setIsSelected] = useState(0);
+  const [data, setData] = useState({detail: null});
   const dispatch = useDispatch();
   const productDetail = useSelector((state) => state.products?.productDetail);
 
@@ -27,7 +29,7 @@ const ProductDetail = (props) => {
 
   const {id} = props.route.params;
   const {navigation} = props;
-  const handleChangeSize = (id, value) => () => {
+  const handleChangeSize = (id) => () => {
     setIsSelected(id);
   };
 
@@ -45,124 +47,147 @@ const ProductDetail = (props) => {
   // console.log('productDe', productDetail);
   useEffect(() => {
     dispatch(actFetchDetail(id));
+    setData({...data, detail: productDetail});
   }, [id]);
 
   return (
-    <SafeAreaView style={styles.mainContainer}>
-      {productDetail != null && (
-        <Fragment>
-          <ScrollView style={styles.scrollContainer}>
-            <View style={styles.topContainer}>
-              <View style={styles.background}>
-                <View style={styles.headerDetail}>
-                  <TouchableOpacity onPress={handleGoBack}>
-                    <Icon style={styles.btnBack} name="arrowleft" size={25} />
-                  </TouchableOpacity>
-                  <Text style={styles.category}>
-                    {/* {productDetail?.categories[0].category} */}Nike
-                  </Text>
-                  <TouchableOpacity style={styles.btn}>
-                    <Icon name="hearto" style={styles.btnIcon} />
-                  </TouchableOpacity>
-                </View>
-                {/* Main Image */}
-                <Image
-                  style={styles.bigImg}
-                  source={{uri: productDetail?.image}}
-                />
-              </View>
-              {/* Sub images */}
-              <View style={styles.moreImgContainer}>
-                <Image
-                  style={styles.smallImg}
-                  source={{uri: productDetail.image}}
-                />
-                <Image
-                  style={{...styles.smallImg, ...styles.smallImg1}}
-                  source={{uri: productDetail.image}}
-                />
-                <Image
-                  style={{...styles.smallImg, ...styles.smallImg2}}
-                  source={{uri: productDetail.image}}
-                />
-                <Image
-                  style={{...styles.smallImg, ...styles.smallImg3}}
-                  source={{uri: productDetail.image}}
-                />
-              </View>
-            </View>
-
-            {/* Info of product */}
-            <View style={styles.bottomContainer}>
-              <View style={styles.info}>
-                <Text style={styles.name}>{productDetail.name}</Text>
-                <View style={styles.priceContainer}>
-                  <Text style={styles.price}>${productDetail.price}</Text>
-                </View>
-              </View>
-              <Text style={styles.description}>
-                {productDetail.description?.trim()}
-              </Text>
-
-              {/* Size of product */}
-              <View>
-                <Text style={styles.size}>Size</Text>
-                <FlatList
-                  style={styles.sizeContainer}
-                  horizontal
-                  data={productDetail.size}
-                  showsHorizontalScrollIndicator={false}
-                  keyExtractor={(item) => item?.id}
-                  renderItem={({item, index}) => {
-                    const selected = index === isSelected;
-                    const sizeNameStyle = selected
-                      ? {...styles.sizeBox, ...styles.sizeActive}
-                      : styles.sizeBox;
-
-                    return (
-                      <TouchableOpacity
-                        onPress={handleChangeSize(index, item)}
-                        style={sizeNameStyle}>
-                        <Text style={selected && styles.sizeNum}>{item}</Text>
+    <>
+      {!data.detail ? (
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" color="#517ad5" />
+        </View>
+      ) : (
+        <SafeAreaView style={styles.mainContainer}>
+          {productDetail && (
+            <Fragment>
+              <ScrollView style={styles.scrollContainer}>
+                <View style={styles.topContainer}>
+                  <View style={styles.background}>
+                    <View style={styles.headerDetail}>
+                      <TouchableOpacity onPress={handleGoBack}>
+                        <Icon
+                          style={styles.btnBack}
+                          name="arrowleft"
+                          size={25}
+                        />
                       </TouchableOpacity>
-                    );
-                  }}
-                />
-              </View>
+                      <Text style={styles.category}>
+                        {/* {productDetail?.categories[0].category} */}Nike
+                      </Text>
+                      <TouchableOpacity style={styles.btn}>
+                        <Icon name="hearto" style={styles.btnIcon} />
+                      </TouchableOpacity>
+                    </View>
+                    {/* Main Image */}
+                    <Image
+                      style={styles.bigImg}
+                      source={{uri: productDetail?.image}}
+                    />
+                  </View>
+                  {/* Sub images */}
+                  <View style={styles.moreImgContainer}>
+                    <Image
+                      style={styles.smallImg}
+                      source={{uri: productDetail.image}}
+                    />
+                    <Image
+                      style={{...styles.smallImg, ...styles.smallImg1}}
+                      source={{uri: productDetail.image}}
+                    />
+                    <Image
+                      style={{...styles.smallImg, ...styles.smallImg2}}
+                      source={{uri: productDetail.image}}
+                    />
+                    <Image
+                      style={{...styles.smallImg, ...styles.smallImg3}}
+                      source={{uri: productDetail.image}}
+                    />
+                  </View>
+                </View>
 
-              {/* Related Products */}
-              <View>
-                <Text style={styles.relatedText}> Related Shoes</Text>
-                <FlatList
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  data={productDetail.relatedProducts}
-                  keyExtractor={(item) => item?.id}
-                  viewabilityConfig={{
-                    waitForInteraction: true,
-                    viewAreaCoveragePercentThreshold: 80,
-                  }}
-                  renderItem={({item, index}) => {
-                    return <RelatedProduct item={item} />;
-                  }}
-                />
-              </View>
-            </View>
-          </ScrollView>
+                {/* Info of product */}
+                <View style={styles.bottomContainer}>
+                  <View style={styles.info}>
+                    <Text style={styles.name}>{productDetail.name}</Text>
+                    <View style={styles.priceContainer}>
+                      <Text style={styles.price}>${productDetail.price}</Text>
+                    </View>
+                  </View>
+                  <Text style={styles.description}>
+                    {productDetail.description?.trim()}
+                  </Text>
 
-          {/* Add to cart  */}
-          <TouchableOpacity onPress={addToCart} style={styles.cartContainer}>
-            <Text style={styles.cart}>Add to Cart</Text>
-          </TouchableOpacity>
-        </Fragment>
+                  {/* Size of product */}
+                  <View>
+                    <Text style={styles.size}>Size</Text>
+                    <FlatList
+                      style={styles.sizeContainer}
+                      horizontal
+                      data={productDetail.size}
+                      showsHorizontalScrollIndicator={false}
+                      keyExtractor={(item) => item?.id}
+                      renderItem={({item, index}) => {
+                        const selected = index === isSelected;
+                        const sizeNameStyle = selected
+                          ? {...styles.sizeBox, ...styles.sizeActive}
+                          : styles.sizeBox;
+
+                        return (
+                          <TouchableOpacity
+                            onPress={handleChangeSize(index, item)}
+                            style={sizeNameStyle}>
+                            <Text style={selected && styles.sizeNum}>
+                              {item}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      }}
+                    />
+                  </View>
+
+                  {/* Related Products */}
+                  <View>
+                    <Text style={styles.relatedText}> Related Shoes</Text>
+                    <FlatList
+                      horizontal
+                      showsHorizontalScrollIndicator={false}
+                      data={productDetail.relatedProducts}
+                      keyExtractor={(item) => item?.id}
+                      viewabilityConfig={{
+                        waitForInteraction: true,
+                        viewAreaCoveragePercentThreshold: 80,
+                      }}
+                      renderItem={({item, index}) => {
+                        return <RelatedProduct item={item} />;
+                      }}
+                    />
+                  </View>
+                </View>
+              </ScrollView>
+
+              {/* Add to cart  */}
+              <TouchableOpacity
+                onPress={addToCart}
+                style={styles.cartContainer}>
+                <Text style={styles.cart}>Add to Cart</Text>
+              </TouchableOpacity>
+            </Fragment>
+          )}
+        </SafeAreaView>
       )}
-    </SafeAreaView>
+    </>
   );
 };
 
 export default ProductDetail;
 
 const styles = StyleSheet.create({
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   topContainer: {
     backgroundColor: '#fff',
   },
