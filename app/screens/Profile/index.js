@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -26,11 +26,13 @@ const {width, height} = Dimensions.get('window');
 
 const Profile = (props) => {
   const dispatch = useDispatch();
+  const [isChangePass, setIsChangePass] = useState();
   const accessToken = useSelector((state) =>
     state.userInfo?.data?.content
       ? state.userInfo.data.content.accessToken
       : null,
   );
+
   const profile = useSelector((state) => state.userInfo.profile);
 
   const options = {
@@ -94,13 +96,22 @@ const Profile = (props) => {
       {text: 'OK', onPress: () => logOut()},
     ]);
   };
-  console.log('profile1', profile);
+  console.log('profile', profile);
+
+  /**
+   * Handle not allow change password when login with facebook
+   */
+  useEffect(() => {
+    if (profile?.email.includes('facebook.com')) {
+      setIsChangePass(false);
+    } else {
+      setIsChangePass(true);
+    }
+  }, [isChangePass]);
 
   useEffect(() => {
-    if (accessToken) {
-      dispatch(getProfile(accessToken));
-    }
-  }, [accessToken]);
+    accessToken && dispatch(getProfile(accessToken));
+  }, [profile]);
 
   const renderLoading = () => {
     return (
@@ -157,7 +168,7 @@ const Profile = (props) => {
                 style={styles.icon}
               />
               <Text style={styles.textInfo}>
-                {profile?.gender ? 'Nam' : 'Nữ'}
+                {profile?.gender ? 'Nữ' : 'Nam'}
               </Text>
             </View>
 
@@ -177,24 +188,46 @@ const Profile = (props) => {
             </View>
           </View>
 
-          <View style={styles.containerBtn}>
-            <Button
-              title="ĐĂNG XUẤT"
-              // eslint-disable-next-line react-native/no-inline-styles
-              buttonStyle={{...styles.btn, backgroundColor: '#F93C66'}}
-              onPress={showNotify}
-            />
+          {!isChangePass ? (
+            <View
+              style={{
+                alignItems: 'center',
+                backgroundColor: '#fff',
+                paddingBottom: 30,
+              }}>
+              <Button
+                title="ĐĂNG XUẤT"
+                // eslint-disable-next-line react-native/no-inline-styles
+                buttonStyle={{
+                  ...styles.btn,
+                  backgroundColor: '#F93C66',
+                  height: height * 0.07,
+                  width: width * 0.9,
+                  borderRadius: 15,
+                }}
+                onPress={showNotify}
+              />
+            </View>
+          ) : (
+            <View style={styles.containerBtn}>
+              <Button
+                title="ĐĂNG XUẤT"
+                // eslint-disable-next-line react-native/no-inline-styles
+                buttonStyle={{...styles.btn, backgroundColor: '#F93C66'}}
+                onPress={showNotify}
+              />
 
-            <Button
-              title="ĐỔI MẬT KHẨU"
-              // eslint-disable-next-line react-native/no-inline-styles
-              buttonStyle={{
-                ...styles.btn,
-                backgroundColor: '#517ad5',
-              }}
-              onPress={changePassword}
-            />
-          </View>
+              <Button
+                title="ĐỔI MẬT KHẨU"
+                // eslint-disable-next-line react-native/no-inline-styles
+                buttonStyle={{
+                  ...styles.btn,
+                  backgroundColor: '#517ad5',
+                }}
+                onPress={changePassword}
+              />
+            </View>
+          )}
         </SafeAreaView>
       ) : (
         <Signin />
@@ -313,9 +346,8 @@ const styles = StyleSheet.create({
   },
 
   btn: {
-    backgroundColor: '#F93C66',
-    height: height * 0.07,
     width: width * 0.43,
+    height: height * 0.07,
     borderRadius: 15,
   },
 });

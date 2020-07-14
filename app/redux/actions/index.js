@@ -126,7 +126,6 @@ export const getProfile = (auth) => {
       },
     })
       .then((res) => {
-        console.log('res.data', res.data);
         dispatch(createAction(GET_PROFILE, res.data.content));
       })
       .catch((err) => {
@@ -157,7 +156,10 @@ export const updateProfile = (account, auth) => {
         Authorization: `Bearer ${auth}`,
       },
     })
-      .then((res) => getProfile(auth))
+      .then((res) => {
+        getProfile(auth);
+        console.log('res.data.content', res.data)
+      })
       .catch((err) => console.log('err', {...err}));
   };
 };

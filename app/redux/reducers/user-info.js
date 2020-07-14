@@ -20,8 +20,7 @@ const reducer = (state = initialState, {type, payload}) => {
     }
 
     case GET_PROFILE: {
-      state.profile = payload;
-      return {...state};
+      return {...state, profile: payload};
     }
     default:
       return state;

@@ -33,6 +33,7 @@ const ProfileEdit = (props) => {
     state.userInfo.data ? state.userInfo.data.content.accessToken : null,
   );
   const profile = useSelector((state) => state.userInfo.profile);
+  console.log('profile edit', profile)
 
   const [account, setAccount] = useState({
     email: '',
@@ -97,12 +98,13 @@ const ProfileEdit = (props) => {
       Toast.LONG,
       Toast.BOTTOM,
     );
-    handleGoBack();
+    // handleGoBack();
+    navigation.navigate('Profile');
   };
 
   var radio_props = [
-    {label: 'Nam', value: true},
-    {label: 'Nữ', value: false},
+    {label: 'Nam', value: false},
+    {label: 'Nữ', value: true},
   ];
 
   useEffect(() => {
@@ -112,6 +114,7 @@ const ProfileEdit = (props) => {
   }, [accessToken]);
 
   useEffect(() => {
+    setIsChoose(profile.gender);
     setAccount({
       ...account,
       email: profile.email,
@@ -119,7 +122,6 @@ const ProfileEdit = (props) => {
       gender: profile.gender,
       phone: profile.phone,
     });
-    setIsChoose(profile.gender);
   }, [profile.email, profile.gender, profile.name, profile.phone]);
 
   return (
@@ -197,7 +199,7 @@ const ProfileEdit = (props) => {
                   style={styles.radio}
                   labelStyle={styles.labelStyle}
                   radio_props={radio_props}
-                  initial={profile?.gender ? 0 : 1}
+                  initial={profile?.gender ? 1 : 0}
                   formHorizontal={true}
                   onPress={(value) => {
                     setIsChoose(value);

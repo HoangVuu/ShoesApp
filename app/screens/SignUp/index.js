@@ -85,8 +85,8 @@ const SignUp = (props) => {
   };
 
   var radio_props = [
-    {label: 'Nam', value: true},
-    {label: 'Nữ', value: false},
+    {label: 'Nam', value: false},
+    {label: 'Nữ', value: true},
   ];
 
   useEffect(() => {

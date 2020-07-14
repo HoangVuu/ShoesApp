@@ -28,6 +28,7 @@ const {width, height} = Dimensions.get('window');
 
 const Signin = (props) => {
   const dispatch = useDispatch();
+  const [isWrong, setIsWrong] = useState(false);
   let _textInputRef = useRef(null);
 
   const [account, setAccount] = useState({
@@ -40,21 +41,23 @@ const Signin = (props) => {
   };
 
   const handleSubmit = () => {
-    //const dispath = useDispatch();
-    Axios({
-      url: 'http://svcy3.myclass.vn/api/Users/signin',
-      method: 'POST',
-      data: account,
-    })
-      .then((res) => {
-        console.log(res);
-        AsyncStorage.setItem('userInfo', JSON.stringify(res.data));
-        AsyncStorage.setItem('accessToken', res.data.accessToken);
-        dispatch(createAction(SET_USER_INFO, JSON.stringify(res.data)));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    account.email && account.password
+      ? //const dispath = useDispatch();
+        Axios({
+          url: 'http://svcy3.myclass.vn/api/Users/signin',
+          method: 'POST',
+          data: account,
+        })
+          .then((res) => {
+            AsyncStorage.setItem('userInfo', JSON.stringify(res.data));
+            AsyncStorage.setItem('accessToken', res.data.content.accessToken);
+            dispatch(createAction(SET_USER_INFO, JSON.stringify(res.data)));
+          })
+          .catch((err) => {
+            setIsWrong(true);
+            console.log(err);
+          })
+      : setIsWrong(true);
   };
 
   const handlesignUp = () => {
@@ -75,6 +78,10 @@ const Signin = (props) => {
                 title=" ĐĂNG NHẬP"
                 customStyle={{fontSize: 35, color: '#fff'}}
               />
+
+              {isWrong && (
+                <Text style={styles.errText}>Sai tài khoản hoặc mật khẩu</Text>
+              )}
 
               <View style={styles.form}>
                 <TextInput
@@ -135,10 +142,6 @@ const Signin = (props) => {
                         console.log('login is cancelled.');
                       } else {
                         AccessToken.getCurrentAccessToken().then((data) => {
-                          console.log(
-                            'data.accessToken.toString()',
-                            data.accessToken.toString(),
-                          );
                           // setFbToken({
                           //   ...fbToken.facebookToken,
                           //   facebookToken: data.accessToken.toString(),
@@ -225,6 +228,15 @@ const styles = StyleSheet.create({
     width: '100%',
     height: height * 0.35,
     zIndex: 1,
+  },
+
+  errText: {
+    marginLeft: width * 0.05,
+    fontSize: 16,
+    color: 'red',
+    backgroundColor: '#000',
+    marginBottom: 10,
+    paddingVertical: 5,
   },
 });
 

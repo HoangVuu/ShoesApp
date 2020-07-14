@@ -1,14 +1,12 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, useRef} from 'react';
 import {
   StyleSheet,
   Text,
   View,
   FlatList,
   TouchableOpacity,
-  Image,
   Dimensions,
   ScrollView,
-  Animated,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Header from '../../components/header';
@@ -18,10 +16,11 @@ import {
   actFetchProducts,
   actFetchAll,
 } from '../../redux/actions';
-import Icon from 'react-native-vector-icons/AntDesign';
 import IconFont from 'react-native-vector-icons/FontAwesome';
 import Product from '../../components/product';
 import RelatedProduct from '../../components/related-product';
+import Carousel from 'react-native-snap-carousel';
+// import Icon from 'react-native-vector-icons/AntDesign';
 
 const {width, height} = Dimensions.get('window');
 
@@ -31,6 +30,8 @@ const Home = () => {
   const allProducts = useSelector((state) => state.products.allProducts);
   const [selectedCategory, setSelectedCategory] = useState(categoryList[0]?.id);
   const productsList = useSelector((state) => state.products?.productsList);
+  let _carousel = useRef();
+  const [isDisplay, setIsDisplay] = useState(true);
 
   // const [fadeAnim] = useState(new Animated.Value(0));
   // const [slideAnim] = useState(new Animated.Value(-200));
@@ -44,6 +45,18 @@ const Home = () => {
     // dispatch(actFetchAll());
   };
 
+  const _renderItem = ({item, index}) => {
+    return (
+      productsList && (
+        <Product item={item} isCurrent={index === currentItemOnView} />
+      )
+    );
+  };
+
+  const onChange = () => {
+    console.log('_carousel', _carousel);
+    console.log('_carousel 1 2', _carousel.currentIndex);
+  };
   useEffect(() => {
     dispatch(actFetchProducts(selectedCategory));
   }, [selectedCategory]);
@@ -52,6 +65,7 @@ const Home = () => {
     setSelectedCategory(categoryList[0]?.id);
     dispatch(actFetchCategory());
     dispatch(actFetchAll());
+
     // Animated.timing(fadeAnim, {
     //   toValue: 1,
     //   duration: 1000,
@@ -91,11 +105,8 @@ const Home = () => {
             }}
           />
         </View>
-
         {/* Products */}
-        <View>
-          <>
-            {productsList && (
+        {/* {productsList && (
               <FlatList
                 style={styles.productListContainer}
                 horizontal
@@ -118,8 +129,28 @@ const Home = () => {
                   )
                 }
               />
-            )}
-          </>
+            )} */}
+        {/* Snap carousel */}
+        <View style={styles.productContainer}>
+          <View style={styles.leftNav}>
+            {/* <Text style={styles.textNav}> Make your life better every day</Text> */}
+          </View>
+
+          <View style={{position: 'relative'}}>
+            <Carousel
+              // style={styles.carousel}
+              // slideInterpolatedStyle={styles.carousel}
+              ref={(c) => {
+                _carousel = c;
+              }}
+              data={productsList}
+              layout={'default'}
+              renderItem={_renderItem}
+              sliderWidth={width}
+              itemWidth={width * 0.5}
+              // onScroll={onChange}
+            />
+          </View>
         </View>
 
         {/* More */}
@@ -131,7 +162,6 @@ const Home = () => {
             style={styles.iconArrow}
           />
         </View>
-
         {/* More Products */}
         {allProducts && (
           <FlatList
@@ -156,9 +186,28 @@ const Home = () => {
 export default Home;
 
 const styles = StyleSheet.create({
+  productContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+
   homeContainer: {
     height: height,
     backgroundColor: '#fff',
+  },
+
+  leftNav: {
+    top: height * 0.18,
+    right: width * 0.6,
+    zIndex: 2,
+    flexDirection: 'row',
+    position: 'absolute',
+    transform: [{rotate: '-90deg'}],
+  },
+
+  textNav: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 
   categoryContainer: {
@@ -168,7 +217,11 @@ const styles = StyleSheet.create({
 
   productListContainer: {
     marginTop: height * 0.02,
-    marginLeft: 15,
+    // marginLeft: 15,
+  },
+
+  carousel: {
+    backgroundColor: 'red',
   },
 
   categoryItem: {
