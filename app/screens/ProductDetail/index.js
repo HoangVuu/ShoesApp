@@ -16,6 +16,7 @@ import {actFetchDetail} from '../../redux/actions';
 import Icon from 'react-native-vector-icons/AntDesign';
 import RelatedProduct from '../../components/related-product';
 import Toast from 'react-native-simple-toast';
+import {Button} from 'react-native-elements';
 
 const {width, height} = Dimensions.get('window');
 
@@ -44,6 +45,15 @@ const ProductDetail = (props) => {
   const handleGoBack = () => {
     navigation.goBack();
   };
+
+  const buyNow = () => {
+    dispatch({
+      type: 'ADD_TO_CART', //thuộc tính bắt buộc: mô tả hành động
+      payload: productDetail, // khi nào cần gửi dữ liệu lên thì gửi kèm
+    });
+    navigation.navigate('Cart');
+  };
+
   // console.log('productDe', productDetail);
   useEffect(() => {
     dispatch(actFetchDetail(id));
@@ -54,7 +64,7 @@ const ProductDetail = (props) => {
     <>
       {!data.detail ? (
         <View style={styles.loading}>
-          <ActivityIndicator size="large" color="#517ad5" />
+          <ActivityIndicator size="large" color="#F93C66" />
         </View>
       ) : (
         <SafeAreaView style={styles.mainContainer}>
@@ -166,11 +176,28 @@ const ProductDetail = (props) => {
               </ScrollView>
 
               {/* Add to cart  */}
-              <TouchableOpacity
-                onPress={addToCart}
-                style={styles.cartContainer}>
-                <Text style={styles.cart}>Add to Cart</Text>
-              </TouchableOpacity>
+              <View style={styles.containerBtn}>
+                <Button
+                  title="BUY NOW"
+                  // eslint-disable-next-line react-native/no-inline-styles
+                  buttonStyle={{
+                    ...styles.btnSubmit,
+                    backgroundColor: '#DD9A89',
+                    color: 'black',
+                  }}
+                  onPress={buyNow}
+                />
+
+                <Button
+                  title="Add to Cart"
+                  // eslint-disable-next-line react-native/no-inline-styles
+                  buttonStyle={{
+                    ...styles.btnSubmit,
+                    backgroundColor: '#F93C66',
+                  }}
+                  onPress={addToCart}
+                />
+              </View>
             </Fragment>
           )}
         </SafeAreaView>
@@ -183,6 +210,7 @@ export default ProductDetail;
 
 const styles = StyleSheet.create({
   loading: {
+    backgroundColor: '#517ad5',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -219,6 +247,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#DD9A89',
     borderBottomLeftRadius: 180,
   },
+
   category: {
     fontWeight: 'bold',
     color: '#fff',
@@ -359,5 +388,20 @@ const styles = StyleSheet.create({
     fontSize: 19,
     fontWeight: 'bold',
     paddingTop: 15,
+    paddingBottom: 10,
+  },
+
+  containerBtn: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: width * 0.05,
+  },
+
+  btnSubmit: {
+    marginTop: 20,
+    height: height * 0.07,
+    width: width * 0.43,
+    borderRadius: 15,
   },
 });

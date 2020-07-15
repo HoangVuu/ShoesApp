@@ -6,12 +6,20 @@ import {
   PermissionsAndroid,
   SafeAreaView,
   ActivityIndicator,
+  Dimensions,
+  FlatList,
+  Text,
+  Linking,
 } from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import {useSelector, useDispatch} from 'react-redux';
 import {getAllStore} from '../../redux/actions';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/Feather';
+
+const {width, height} = Dimensions.get('window');
 
 const Stores = () => {
   const dispatch = useDispatch();
@@ -66,6 +74,7 @@ const Stores = () => {
 
   useEffect(() => {
     dispatch(getAllStore());
+    console.log('object', storesList);
   }, []);
 
   let coords =
@@ -94,9 +103,9 @@ const Stores = () => {
         </View>
       ) : (
         userLocation && (
-          <SafeAreaView style={{flex: 1}}>
+          <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
             <MapView
-              style={{flex: 1}}
+              style={{height: height * 0.7}}
               zoomEnabled
               zoomControlEnabled
               provider={PROVIDER_GOOGLE}
@@ -126,6 +135,33 @@ const Stores = () => {
                   />
                 ))}
             </MapView>
+            <ScrollView style={{height: height * 0.3}}>
+              <FlatList
+                showsHorizontalScrollIndicator={false}
+                data={storesList}
+                keyExtractor={(item) => item.id}
+                renderItem={({item, index}) => {
+                  return (
+                    <View style={styles.destinationWrapper}>
+                      <View style={styles.destinationContainer}>
+                        <Text style={styles.shopName}>{item.name}</Text>
+                        <Text style={styles.shopAddress}>
+                          {item.description}
+                        </Text>
+                      </View>
+                      <TouchableOpacity
+                        onPress={() =>
+                          Linking.openURL(
+                            `http://maps.google.com/maps?daddr=${item.description}`,
+                          )
+                        }>
+                        <Icon name="chevron-right" size={24} color="#517ad5" />
+                      </TouchableOpacity>
+                    </View>
+                  );
+                }}
+              />
+            </ScrollView>
           </SafeAreaView>
         )
       )}
@@ -143,12 +179,40 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
+
   map: {
     ...StyleSheet.absoluteFillObject,
   },
+
   loading: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  destinationWrapper: {
+    backgroundColor: '#fff',
+    marginHorizontal: 20,
+    paddingVertical: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderTopColor: '#b7b0b0',
+    borderTopWidth: 1,
+  },
+
+  destinationContainer: {
+    backgroundColor: '#fff',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+
+  shopName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+
+  shopAddress: {
+    fontSize: 16,
   },
 });

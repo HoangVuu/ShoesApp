@@ -10,10 +10,9 @@ import Cart from '../screens/Cart';
 import Profile from '../screens/Profile';
 import Home from '../screens/Home';
 import Favorites from '../screens/Favorites';
-import Category from '../screens/Category';
 import Icon from 'react-native-vector-icons/AntDesign';
-import {useDispatch} from 'react-redux';
-import {createAction} from '../redux/actions';
+import {useDispatch, useSelector} from 'react-redux';
+import {createAction, getProfile} from '../redux/actions';
 import {SET_USER_INFO} from '../redux/actions/type';
 import ProfileEdit from '../screens/ProfileEdit';
 import ChangePassword from '../screens/ChangePassword';
@@ -33,6 +32,13 @@ const AppContainer = () => {
       //2. Lấy userInfo xuống store và tiến hành ẩn hiện các stack sign in
     });
   }, [dispatch]);
+
+  // useEffect(() => {
+  //   AsyncStorage.getItem('accessToken').then((value) => {
+  //     dispatch(getProfile(value));
+  //     console.log('value', value);
+  //   });
+  // }, []);
 
   const BottomTab = () => {
     return (

@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  Dimensions,
 } from 'react-native';
 import IconF from 'react-native-vector-icons/FontAwesome';
 import IconM from 'react-native-vector-icons/MaterialIcons';
@@ -14,6 +15,8 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import {withNavigation} from '@react-navigation/compat';
 import {useSelector, useDispatch} from 'react-redux';
 import {likeProduct, dislikeProduct} from '../../redux/actions';
+
+const {width, height} = Dimensions.get('window');
 
 const Product = (props) => {
   const dispatch = useDispatch();
@@ -116,16 +119,16 @@ const Product = (props) => {
     <Animated.View
       style={{
         ...styles.productContainer,
-        transform: [
-          {
-            rotateY: flipAnim.interpolate({
-              inputRange: [0, 1],
-              outputRange: ['0deg', '80deg'],
-            }),
-          },
-        ],
-        width: widthAnim,
-        height: heightAnim,
+        // transform: [
+        //   {
+        //     rotateY: flipAnim.interpolate({
+        //       inputRange: [0, 1],
+        //       outputRange: ['0deg', '80deg'],
+        //     }),
+        //   },
+        // ],
+        // width: widthAnim,
+        // height: heightAnim,
         // opacity: fadeAnim,
         // transform: [{translateY: slideAnim}],
       }}>
@@ -170,9 +173,13 @@ const Product = (props) => {
 
 const styles = StyleSheet.create({
   productContainer: {
+    width: width * 0.43,
+    height: height * 0.35,
+    marginRight: width * 0.02,
     backgroundColor: '#517ad5',
     borderRadius: 15,
-    marginRight: 50,
+    // backgroundColor: 'red',
+    // marginRight: width * 0.05,
     position: 'relative',
   },
 
