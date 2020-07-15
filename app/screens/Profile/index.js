@@ -111,7 +111,7 @@ const Profile = (props) => {
 
   useEffect(() => {
     accessToken && dispatch(getProfile(accessToken));
-  }, [profile]);
+  }, [accessToken]);
 
   const renderLoading = () => {
     return (
