@@ -14,13 +14,13 @@ import IconM from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {withNavigation} from '@react-navigation/compat';
 import {useSelector, useDispatch} from 'react-redux';
-import {likeProduct, dislikeProduct} from '../../redux/actions';
 
 const {width, height} = Dimensions.get('window');
 
 const Product = (props) => {
   const dispatch = useDispatch();
   const [isLove, setIsLove] = useState(true);
+  const [isLiked, setIsLiked] = useState();
   const {item, isCurrent} = props;
   const [flipAnim] = useState(new Animated.Value(0));
   const [widthAnim] = useState(new Animated.Value(160));
@@ -29,13 +29,8 @@ const Product = (props) => {
   const categories = JSON.parse(JSON.stringify(item.categories));
 
   const userInfo = useSelector((state) => state.userInfo);
-
-  const accessToken = useSelector((state) =>
-    state.userInfo?.data?.content
-      ? state.userInfo.data.content.accessToken
-      : null,
-  );
-
+  const lovedList = useSelector((state) => state.favorite);
+  const listLiked = lovedList.map((favoItem) => favoItem.id);
   const addToCart = () => {
     // send request add to cart
     dispatch({
@@ -50,12 +45,26 @@ const Product = (props) => {
     });
   };
 
+  const addItem = () => {
+    dispatch({
+      type: 'ADD_TO_FAVORITE',
+      payload: item,
+    });
+  };
+
+  const removeItem = () => {
+    dispatch({
+      type: 'REMOVE_TO_FAVORITE',
+      payload: item?.id,
+    });
+  };
+
   const handleFavorite = () => {
     setIsLove(!isLove);
     console.log('love', isLove);
-    isLove
-      ? dispatch(likeProduct(item.id, accessToken))
-      : dispatch(dislikeProduct(item.id, accessToken));
+    console.log('userInfo.isLogin', userInfo.isLogin);
+
+    isLove ? addItem() : removeItem();
   };
 
   const handleLoginrequest = () => {
@@ -73,10 +82,18 @@ const Product = (props) => {
     );
   };
 
+  console.log('item.id', item.id);
+  console.log('list Liked', listLiked);
+
   useEffect(() => {
-    if (userInfo) {
-      console.log('userInfo', userInfo);
+    if (listLiked.some((favo) => favo === item.id)) {
+      setIsLove(false);
+    } else {
+      setIsLove(true);
     }
+  }, [listLiked]);
+
+  useEffect(() => {
     if (isCurrent) {
       //make animation
       Animated.timing(widthAnim, {

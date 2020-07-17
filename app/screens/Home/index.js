@@ -105,31 +105,6 @@ const Home = () => {
             }}
           />
         </View>
-        {/* Products */}
-        {/* {productsList && (
-              <FlatList
-                style={styles.productListContainer}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                data={productsList}
-                keyExtractor={(item) => item.id}
-                viewabilityConfig={{
-                  waitForInteraction: true,
-                  viewAreaCoveragePercentThreshold: 80,
-                }}
-                // onEndReachedThreshold={80} phân trang
-                // onEndReached={}
-                // onViewableItemsChanged={handleChange}
-                renderItem={({item, index}) =>
-                  productsList && (
-                    <Product
-                      item={item}
-                      isCurrent={index === currentItemOnView}
-                    />
-                  )
-                }
-              />
-            )} */}
         {/* Snap carousel */}
         <View style={styles.productContainer}>
           <View style={styles.leftNav}>

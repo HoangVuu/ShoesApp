@@ -5,11 +5,10 @@ import {
   FETCH_PRODUCTS_BY_CATEGORY,
   FETCH_PRODUCT_BY_ID,
   FETCH_ALL_PRODUCTS,
-  // LIKE_SHOES,
-  // DISLIKE_SHOES,
   SET_USER_INFO,
   GET_PROFILE,
   GET_ALL_STORES,
+  FETCH_PRODUCT_FAVORITES,
 } from './type';
 
 export const createAction = (type, payload) => ({
@@ -25,6 +24,12 @@ export const createAction = (type, payload) => ({
 export const getCart = () => {
   return (dispatch) => {
     dispatch(createAction('GET_FROM_CART'));
+  };
+};
+
+export const getFavorites = () => {
+  return (dispatch) => {
+    dispatch(createAction('GET_FROM_FAVORITE'));
   };
 };
 
@@ -116,6 +121,22 @@ export const dislikeProduct = (id, auth) => {
   };
 };
 
+export const getAllFavorites = (auth) => {
+  return (dispatch) => {
+    axios({
+      method: 'GET',
+      url: 'http://svcy3.myclass.vn/api/Users/getproductfavorite',
+      headers: {
+        Authorization: `Bearer ${auth}`,
+      },
+    })
+      .then((res) => {
+        dispatch(createAction(FETCH_PRODUCT_FAVORITES, res.data.content));
+      })
+      .catch((err) => console.log({...err}));
+  };
+};
+
 export const getProfile = (auth) => {
   return (dispatch) => {
     axios({
@@ -158,7 +179,7 @@ export const updateProfile = (account, auth) => {
     })
       .then((res) => {
         getProfile(auth);
-        console.log('res.data.content', res.data)
+        console.log('res.data.content', res.data);
       })
       .catch((err) => console.log('err', {...err}));
   };
@@ -172,12 +193,9 @@ export const loginWithFacebook = (facebookToken) => {
       data: facebookToken,
     })
       .then((res) => {
-        console.log('fbToken', facebookToken);
-        console.log('chay roi', res.data);
         AsyncStorage.setItem('userInfo', JSON.stringify(res.data));
         AsyncStorage.setItem('accessToken', res.data.accessToken);
         dispacth(createAction(SET_USER_INFO, JSON.stringify(res.data)));
-        // getProfile(res.data.content.accessToken);
       })
       .catch((err) => console.log('err', {...err}));
   };
@@ -209,15 +227,19 @@ export const getAllStore = () => {
   };
 };
 
-export const changePassword = (newPass) => {
+export const changePassword = (newPass, auth) => {
   return () => {
     axios({
       method: 'POST',
       url: 'http://svcy3.myclass.vn/api/Users/changePassword',
       data: newPass,
+      headers: {
+        Authorization: `Bearer ${auth}`,
+      },
     })
       .then((res) => {
         console.log('res', newPass);
+        console.log('change password', res.data);
       })
       .catch((err) => console.log({...err}));
   };

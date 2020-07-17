@@ -26,7 +26,6 @@ const {width, height} = Dimensions.get('window');
 
 const Profile = (props) => {
   const dispatch = useDispatch();
-  const [isChangePass, setIsChangePass] = useState();
   const accessToken = useSelector((state) =>
     state.userInfo?.data?.content
       ? state.userInfo.data.content.accessToken
@@ -97,17 +96,6 @@ const Profile = (props) => {
     ]);
   };
   console.log('profile', profile);
-
-  /**
-   * Handle not allow change password when login with facebook
-   */
-  useEffect(() => {
-    if (profile?.email.includes('facebook.com')) {
-      setIsChangePass(false);
-    } else {
-      setIsChangePass(true);
-    }
-  }, [isChangePass]);
 
   useEffect(() => {
     accessToken && dispatch(getProfile(accessToken));
@@ -188,7 +176,7 @@ const Profile = (props) => {
             </View>
           </View>
 
-          {!isChangePass ? (
+          {profile.email?.includes('facebook') ? (
             <View
               style={{
                 alignItems: 'center',
