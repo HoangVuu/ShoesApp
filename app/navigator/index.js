@@ -33,13 +33,6 @@ const AppContainer = () => {
     });
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   AsyncStorage.getItem('accessToken').then((value) => {
-  //     dispatch(getProfile(value));
-  //     console.log('value', value);
-  //   });
-  // }, []);
-
   const BottomTab = () => {
     return (
       <Tabs.Navigator

@@ -23,54 +23,56 @@ const {width, height} = Dimensions.get('window');
 
 const Stores = () => {
   const dispatch = useDispatch();
-  const [userLocation, setUserLocation] = useState(null);
+  const [userLocation, setUserLocation] = useState({
+    latitude: 10.883202,
+    longitude: 106.781713,
+  });
 
   // latitude: 0, 10.870759
   // longitude: 0, 106.785955
 
   const storesList = useSelector((state) => state.stores?.storesList);
-  Geolocation.getCurrentPosition((info) => console.log(info.coords));
+  // Geolocation.getCurrentPosition((info) => console.log(info.coords));
 
-  useEffect(() => {
-    if (Platform.OS === 'ios') {
-      getLocation();
-    } else if (Platform.OS === 'android') {
-      PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: 'Please Active location!',
-          message: 'Access location to fetch data store.',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      )
-        .then((granted) => {
-          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            getLocation();
-          } else {
-            console.log('Location permission denied');
-          }
-        })
-        .catch((err) => console.log(err));
-    }
-  }, [getLocation]);
+  // useEffect(() => {
+  //   if (Platform.OS === 'ios') {
+  //     getLocation();
+  //   } else if (Platform.OS === 'android') {
+  //     PermissionsAndroid.request(
+  //       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+  //       {
+  //         title: 'Please Active location!',
+  //         message: 'Access location to fetch data store.',
+  //         buttonNeutral: 'Ask Me Later',
+  //         buttonNegative: 'Cancel',
+  //         buttonPositive: 'OK',
+  //       },
+  //     )
+  //       .then((granted) => {
+  //         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+  //           getLocation();
+  //         } else {
+  //           console.log('Location permission denied');
+  //         }
+  //       })
+  //       .catch((err) => console.log(err));
+  //   }
+  // }, [getLocation]);
 
-  const getLocation = useCallback(() => {
-    Geolocation.getCurrentPosition(
-      (info) => {
-        setUserLocation({
-          latitude: 10.870759,
-          longitude: 106.785955,
-        });
-      },
-      (err) => {
-        console.log(err);
-      },
-    );
-  }, []);
+  // const getLocation = useCallback(() => {
+  //   Geolocation.getCurrentPosition(
+  //     (info) => {
+  //       setUserLocation({
+  //         latitude: 10.870759,
+  //         longitude: 106.785955,
+  //       });
+  //     },
+  //     (err) => {
+  //       console.log(err);
+  //     },
+  //   );
+  // }, []);
   console.log('storesList', storesList);
-  console.log('userLocation', userLocation);
 
   useEffect(() => {
     dispatch(getAllStore());
@@ -152,7 +154,7 @@ const Stores = () => {
                       <TouchableOpacity
                         onPress={() =>
                           Linking.openURL(
-                            `http://maps.google.com/maps?daddr=${item.description}`,
+                            `https://www.google.com/maps?saddr=My+Location&daddr=${item.description}`,
                           )
                         }>
                         <Icon name="chevron-right" size={24} color="#517ad5" />

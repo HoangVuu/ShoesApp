@@ -29,7 +29,7 @@ const Favorites = () => {
     <View style={styles.favoriteContainer}>
       <View style={styles.headerContainer}>
         <Text style={styles.textHeader}>My Favorite</Text>
-        <Text style={styles.total}> Total 1 items</Text>
+        <Text style={styles.total}> Total {lovedList?.length} items</Text>
       </View>
 
       <FlatList
@@ -47,42 +47,6 @@ const Favorites = () => {
         keyExtractor={(item, index) => index}
       />
     </View>
-
-    // {lovedList?.length ? (
-    //   <ScrollView style={styles.scrollContainer}>
-    //     <FlatList
-    //       horizontal
-    //       showsHorizontalScrollIndicator={false}
-    //       style={styles.favoriteList}
-    //       data={lovedList}
-    //       removeClippedSubviews
-    //       renderItem={({item}) => {
-    //         return (
-    //           <TouchableOpacity style={styles.info}>
-    //             <FavoriteItem key={item.id} item={item} />
-    //           </TouchableOpacity>
-    //         );
-    //       }}
-    //       keyExtractor={(item, index) => index}
-    //     />
-    //   </ScrollView>
-    // ) : (
-    //   <View style={styles.emptyContainer}>
-    //     <Text style={{color: '#847d7d'}}>
-    //       Giỏ hàng của bạn đang trống, vui lòng chọn giày
-    //     </Text>
-    //   </View>
-    // )}
-
-    //   <View>
-    //     <View style={styles.headerContainer}>
-    //       <Text style={styles.textTotal}>Total</Text>
-    //       <Text style={styles.totalMoney}>$2121</Text>
-    //     </View>
-    //     <TouchableOpacity style={styles.cartContainer}>
-    //       <Text style={styles.cart}>NEXT</Text>
-    //     </TouchableOpacity>
-    //   </View>
   );
 };
 

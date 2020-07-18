@@ -19,12 +19,12 @@ const FavoriteItem = (props) => {
 
   const {item} = props;
 
-  // const showNotify = () => {
-  //   Alert.alert('Notification', 'Do you want to delete this product?', [
-  //     {text: 'Cancel', style: 'cancel'},
-  //     {text: 'OK', onPress: () => removeCartItem()},
-  //   ]);
-  // };
+  const showNotify = () => {
+    Alert.alert('Notification', 'Do you want to delete this product?', [
+      {text: 'Cancel', style: 'cancel'},
+      {text: 'OK', onPress: () => deleteFavorite()},
+    ]);
+  };
 
   const deleteFavorite = () => {
     dispatch({
@@ -39,7 +39,7 @@ const FavoriteItem = (props) => {
 
   return (
     <View style={styles.favorite}>
-      <TouchableOpacity onPress={deleteFavorite} style={styles.deleteAll}>
+      <TouchableOpacity onPress={showNotify} style={styles.deleteAll}>
         <IconF name="remove" size={18} />
       </TouchableOpacity>
       <Image source={{uri: item.image}} style={styles.imgContainer} />
@@ -54,7 +54,7 @@ const FavoriteItem = (props) => {
 const styles = StyleSheet.create({
   favorite: {
     width: width * 0.47,
-    height: height * 0.34,
+    height: height * 0.35,
     backgroundColor: 'white',
     margin: width * 0.01,
     borderRadius: 10,
@@ -65,6 +65,8 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.2,
     elevation: 6,
+    paddingBottom: 30,
+    // paddingBottom: 20,
   },
 
   imgContainer: {
@@ -80,6 +82,7 @@ const styles = StyleSheet.create({
   },
 
   name: {
+    height: height * 0.06,
     color: '#9999FF',
     fontWeight: 'bold',
     fontSize: 17,
@@ -89,7 +92,6 @@ const styles = StyleSheet.create({
 
   price: {
     fontSize: 16,
-    marginBottom: 10,
   },
 
   deleteAll: {

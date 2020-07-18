@@ -113,12 +113,8 @@ const Home = () => {
 
           <View style={{position: 'relative', marginLeft: width * 0.05}}>
             <Carousel
-              // enableSnap={true}
-              // loop
               activeSlideAlignment="start"
               inactiveSlideOpacity={1}
-              // style={styles.carousel}
-              // slideInterpolatedStyle={styles.carousel}
               ref={(c) => {
                 _carousel = c;
               }}
