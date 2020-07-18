@@ -4,6 +4,7 @@ import products from './products';
 import userInfo from './user-info';
 import cart from './cart';
 import stores from './stores';
+import favorite from './favorite';
 
 export default combineReducers({
   category,
@@ -11,4 +12,5 @@ export default combineReducers({
   userInfo,
   cart,
   stores,
+  favorite,
 });

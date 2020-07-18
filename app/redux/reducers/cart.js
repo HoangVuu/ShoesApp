@@ -3,7 +3,6 @@ import {
   INCREASE_QUANTITY,
   DECREASE_QUANTITY,
   REMOVE_TO_CART,
-  REMOVE_ALL,
 } from '../actions/type';
 
 let initialState = [];
@@ -45,13 +44,6 @@ export default (state = initialState, {type, payload}) => {
       state.splice(index, 1);
       return [...state];
     }
-
-    // case REMOVE_ALL: {
-    //   //tim vị trí sp muốn xoa.
-    //   const index = state.findIndex((item) => item.product.id === payload);
-    //   state.splice(index, 1);
-    //   return [...state];
-    // }
 
     default:
       return state;

@@ -32,8 +32,10 @@ const RelatedProduct = (props) => {
           style={styles.relatedImg}
           source={{uri: item.image}}
         />
-        <Text style={styles.relatedName}>{item.name}</Text>
-        <Text style={styles.relatedPrice}>${item.price}</Text>
+        <View style={styles.infoContainer}>
+          <Text style={styles.relatedName}>{item.name}</Text>
+          <Text style={styles.relatedPrice}>${item.price}</Text>
+        </View>
       </TouchableOpacity>
     )
   );
@@ -55,8 +57,21 @@ const styles = StyleSheet.create({
     transform: [{rotate: '-15deg'}],
   },
 
+  infoContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   relatedName: {
+    textAlign: 'center',
+    alignContent: 'center',
+    width: width * 0.32,
+    alignSelf: 'center',
     textTransform: 'capitalize',
+    height: height * 0.05,
+    fontWeight: 'bold',
   },
 
   relatedPrice: {

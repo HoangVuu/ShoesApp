@@ -79,7 +79,7 @@ const ChangePassword = (props) => {
 
     const body = {...formik.values};
     console.log('body', body);
-    dispatch(changePassword(body));
+    dispatch(changePassword(body, accessToken));
 
     Toast.show(
       'Cập nhập mật khẩu tài khoản thành công.',

@@ -2,6 +2,7 @@ import {
   FETCH_PRODUCTS_BY_CATEGORY,
   FETCH_PRODUCT_BY_ID,
   FETCH_ALL_PRODUCTS,
+  FETCH_PRODUCT_FAVORITES,
 } from '../actions/type';
 
 let initialState = {
@@ -24,6 +25,9 @@ export default (state = initialState, {type, payload}) => {
     case FETCH_ALL_PRODUCTS:
       state.allProducts = payload;
       return {...state};
+
+    case FETCH_PRODUCT_FAVORITES:
+      return {...state, likedProduct: payload};
 
     default:
       return state;
