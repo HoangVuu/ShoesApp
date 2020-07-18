@@ -29,23 +29,41 @@ const Favorites = () => {
     <View style={styles.favoriteContainer}>
       <View style={styles.headerContainer}>
         <Text style={styles.textHeader}>My Favorite</Text>
-        <Text style={styles.total}> Total {lovedList?.length} items</Text>
+        <Text style={styles.total}>
+          {' '}
+          Total {lovedList?.length} {lovedList?.length === 0 ? 'item' : 'items'}
+        </Text>
       </View>
 
-      <FlatList
-        data={lovedList}
-        removeClippedSubviews
-        showsVerticalScrollIndicator={false}
-        renderItem={({item}) => {
-          return (
-            <TouchableOpacity>
-              <FavoriteItem key={item.id} item={item} />
-            </TouchableOpacity>
-          );
-        }}
-        numColumns={2}
-        keyExtractor={(item, index) => index}
-      />
+      <View style={{width: width}}>
+        {lovedList.length ? (
+          <FlatList
+            data={lovedList}
+            removeClippedSubviews
+            showsVerticalScrollIndicator={false}
+            renderItem={({item}) => {
+              return (
+                <TouchableOpacity>
+                  <FavoriteItem key={item.id} item={item} />
+                </TouchableOpacity>
+              );
+            }}
+            numColumns={2}
+            keyExtractor={(item, index) => index}
+          />
+        ) : (
+          <View style={styles.emptyContainer}>
+            <Text style={{color: '#847d7d'}}>
+              You don't have any favorites shoes.
+            </Text>
+
+            <Text style={{color: '#847d7d'}}>
+              {' '}
+              Please choose shoes you liked.
+            </Text>
+          </View>
+        )}
+      </View>
     </View>
   );
 };
@@ -68,21 +86,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     flexDirection: 'column',
     padding: width * 0.01,
-    backgroundColor: '#f5f5f5',
-  },
-
-  favoriteList: {
-    backgroundColor: '#f5f5f5',
-    marginTop: 5,
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    height: height * 0.58,
-    width: width,
-  },
-
-  btnBack: {
-    marginLeft: 15,
+    backgroundColor: '#fff',
   },
 
   textHeader: {
@@ -102,19 +106,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 
-  cartContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F93C66',
-    width: width * 0.8,
-    height: height * 0.06,
-    borderRadius: 8,
-    marginVertical: height * 0.03,
-  },
-
   cart: {
     color: '#fff',
     textTransform: 'uppercase',
@@ -122,7 +113,6 @@ const styles = StyleSheet.create({
 
   textTotal: {
     fontSize: 16,
-    marginLeft: 20,
     textTransform: 'uppercase',
   },
 
@@ -135,6 +125,6 @@ const styles = StyleSheet.create({
   emptyContainer: {
     alignItems: 'center',
     marginTop: 20,
-    height: height * 0.54,
+    // height: height * 0.54,
   },
 });
