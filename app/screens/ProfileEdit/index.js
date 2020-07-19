@@ -33,7 +33,7 @@ const ProfileEdit = (props) => {
     state.userInfo.data ? state.userInfo.data.content.accessToken : null,
   );
   const profile = useSelector((state) => state.userInfo.profile);
-  console.log('profile edit', profile)
+  console.log('profile edit', profile);
 
   const [account, setAccount] = useState({
     email: '',
@@ -49,18 +49,18 @@ const ProfileEdit = (props) => {
   const accountSchema = yup.object().shape({
     email: yup
       .string()
-      .required('*Email bắt buộc nhập')
-      .email('*Vui lòng nhập đúng email')
-      .max(40, '*Email nhỏ hơn 40 kí tự '),
+      .required('*Email is required')
+      .email('*Please enter email with the right format')
+      .max(20, '*Email must be less than 20 characters '),
     name: yup
       .string()
-      .required('*Tên bắt buộc nhập')
-      .max(15, '*Tên nhỏ hơn 20 kí tự'),
+      .required('*Name is required')
+      .max(15, '*Name must be less than 15 characters'),
     phone: yup
       .string()
-      .required('*Số điện thoại bắt buộc nhập')
-      .max(10, '*Số điẹn thoại phải là 10 chữ số')
-      .min(10, '*Số điẹn thoại phải là 10 chữ số'),
+      .required('*Phone number is required')
+      .max(10, '*Phone number must be enough 10 numbers')
+      .min(10, '*Phone number must be enough 10 numbers'),
   });
 
   const formik = useFormik({
@@ -103,8 +103,8 @@ const ProfileEdit = (props) => {
   };
 
   var radio_props = [
-    {label: 'Nam', value: false},
-    {label: 'Nữ', value: true},
+    {label: 'Make', value: false},
+    {label: 'Female', value: true},
   ];
 
   useEffect(() => {
@@ -137,7 +137,7 @@ const ProfileEdit = (props) => {
         </TouchableOpacity>
 
         <Title
-          title="CHỈNH SỬA THÔNG TIN"
+          title="EDIT PROFILE"
           customStyle={{fontSize: 22, color: '#F93C66'}}
         />
 
@@ -152,7 +152,6 @@ const ProfileEdit = (props) => {
                 editable={false} //readonly
                 style={styles.formControl}
                 defaultValue={account.email}
-                placeholder="Nhập email"
                 placeholderTextColor="#bfb5b5"
                 keyboardType="default"
                 returnKeyType="next"
@@ -174,7 +173,7 @@ const ProfileEdit = (props) => {
               <TextInput
                 defaultValue={account.name}
                 style={styles.formControl}
-                placeholder="Nhập tên "
+                placeholder="Enter Name"
                 placeholderTextColor="#bfb5b5"
                 autoCapitalize="none" // tắt tự động viết hoa chữ cái đầu input
                 keyboardType="default"
@@ -208,11 +207,11 @@ const ProfileEdit = (props) => {
               </View>
 
               {/* Phone  */}
-              <Text style={styles.label}>Phone:</Text>
+              <Text style={styles.label}>Phone number:</Text>
               <TextInput
                 style={styles.formControl}
                 defaultValue={account.phone}
-                placeholder="Nhập SĐT"
+                placeholder="Enter Phone Number"
                 placeholderTextColor="#bfb5b5"
                 keyboardType="default"
                 returnKeyLabel="Submit"
@@ -232,14 +231,14 @@ const ProfileEdit = (props) => {
 
               <View style={styles.containerBtn}>
                 <Button
-                  title="LƯU"
+                  title="SAVE"
                   // eslint-disable-next-line react-native/no-inline-styles
                   buttonStyle={{...styles.btn, backgroundColor: '#F93C66'}}
                   onPress={handleSubmit}
                 />
 
                 <Button
-                  title="HỦY"
+                  title="CANCEL"
                   // eslint-disable-next-line react-native/no-inline-styles
                   buttonStyle={{
                     ...styles.btn,

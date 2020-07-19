@@ -20,7 +20,6 @@ const {width, height} = Dimensions.get('window');
 const Product = (props) => {
   const dispatch = useDispatch();
   const [isLove, setIsLove] = useState(true);
-  const [isLiked, setIsLiked] = useState();
   const {item, isCurrent} = props;
   const [flipAnim] = useState(new Animated.Value(0));
   const [widthAnim] = useState(new Animated.Value(160));
@@ -69,8 +68,8 @@ const Product = (props) => {
 
   const handleLoginrequest = () => {
     Alert.alert(
-      'Yêu cầu đăng nhập',
-      'Bạn phải đăng nhập để sử dụng chức năng này',
+      'Login request',
+      'You have to login to experience this feature',
       [
         {
           text: 'Cancel',
@@ -149,40 +148,42 @@ const Product = (props) => {
         // opacity: fadeAnim,
         // transform: [{translateY: slideAnim}],
       }}>
-      <View style={styles.productInfo}>
-        <Text style={styles.productCat}>{item.categories[0].category}</Text>
-        <Text style={styles.productName}>
-          {item.name
-            .toLocaleLowerCase()
-            .replace(categories[0].category.toLowerCase(), '')
-            .trim()}
-        </Text>
-        <Text style={styles.productPrice}>${item.price}</Text>
-      </View>
-      <Image source={{uri: item.image}} style={styles.productImg} />
-      <TouchableOpacity onPress={goToDetail} style={styles.iconContainer}>
-        <IconF
-          name="long-arrow-right"
-          size={25}
-          style={styles.iconArrow}
-          color="white"
-        />
-      </TouchableOpacity>
+      <TouchableOpacity onPress={goToDetail}>
+        <View style={styles.productInfo}>
+          <Text style={styles.productCat}>{item.categories[0].category}</Text>
+          <Text style={styles.productName}>
+            {item.name
+              .toLocaleLowerCase()
+              .replace(categories[0].category.toLowerCase(), '')
+              .trim()}
+          </Text>
+          <Text style={styles.productPrice}>${item.price}</Text>
+        </View>
+        <Image source={{uri: item.image}} style={styles.productImg} />
+        <TouchableOpacity onPress={goToDetail} style={styles.iconContainer}>
+          <IconF
+            name="long-arrow-right"
+            size={25}
+            style={styles.iconArrow}
+            color="white"
+          />
+        </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.favorite}
-        onPress={userInfo?.isLogin ? handleFavorite : handleLoginrequest}>
-        {!isLove ? (
-          <View>
-            <Icon name="heart" size={18} color="red" style={styles.shadow} />
-          </View>
-        ) : (
-          <Icon name="hearto" color="#fff" size={18} />
-        )}
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.favorite}
+          onPress={userInfo?.isLogin ? handleFavorite : handleLoginrequest}>
+          {!isLove ? (
+            <View>
+              <Icon name="heart" size={18} color="red" style={styles.shadow} />
+            </View>
+          ) : (
+            <Icon name="hearto" color="#fff" size={18} />
+          )}
+        </TouchableOpacity>
 
-      <TouchableOpacity onPress={addToCart} style={styles.cart}>
-        <IconM name="add-shopping-cart" size={23} color="#DD9A89" />
+        <TouchableOpacity onPress={addToCart} style={styles.cart}>
+          <IconM name="add-shopping-cart" size={23} color="#DD9A89" />
+        </TouchableOpacity>
       </TouchableOpacity>
     </Animated.View>
   );

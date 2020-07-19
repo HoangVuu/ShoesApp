@@ -37,22 +37,22 @@ const SignUp = (props) => {
   const accountSchema = yup.object().shape({
     email: yup
       .string()
-      .required('*Email bắt buộc nhập')
-      .email('*Vui lòng nhập đúng email')
-      .max(20, '*Email nhỏ hơn 20 kí tự '),
+      .required('*Email is required')
+      .email('*Please enter email with the right format')
+      .max(20, '*Email must be less than 20 characters '),
     password: yup
       .string()
-      .required('*Mật khẩu bắt buộc nhập')
-      .min(6, '*Passsword lớn hơn 5 kí tự'),
+      .required('*Password is required')
+      .min(6, '*Passsword must be more than 5 characters'),
     name: yup
       .string()
-      .required('*Tên bắt buộc nhập')
-      .max(15, '*Tên nhỏ hơn 20 kí tự'),
+      .required('*Name is required')
+      .max(15, '*Name must be less than 15 characters'),
     phone: yup
       .string()
-      .required('*Số điện thoại bắt buộc nhập')
-      .max(10, '*Số điẹn thoại phải là 10 chữ số')
-      .min(10, '*Số điẹn thoại phải là 10 chữ số'),
+      .required('*Phone number is required')
+      .max(10, '*Phone number must be enough 10 numbers')
+      .min(10, '*Phone number must be enough 10 numbers'),
   });
 
   const formik = useFormik({
@@ -80,13 +80,18 @@ const SignUp = (props) => {
     console.log('body', body);
 
     dispatch(signUp(body));
-    Toast.show('Đăng kí tài khoản thành công.', 200, Toast.LONG, Toast.BOTTOM);
+    Toast.show(
+      'Register a new account successful.',
+      200,
+      Toast.LONG,
+      Toast.BOTTOM,
+    );
     handleGoBack();
   };
 
   var radio_props = [
-    {label: 'Nam', value: false},
-    {label: 'Nữ', value: true},
+    {label: 'Male', value: false},
+    {label: 'Female', value: true},
   ];
 
   useEffect(() => {
@@ -109,7 +114,7 @@ const SignUp = (props) => {
           {/* Form sign up  */}
           <View style={styles.content}>
             <Title
-              title="ĐĂNG KÍ TÀI KHOẢN"
+              title="REGISTER NEW ACCOUNT"
               customStyle={{fontSize: 22, color: '#F93C66'}}
             />
             <View style={styles.form}>
@@ -117,7 +122,7 @@ const SignUp = (props) => {
               <Text style={styles.label}>Email:</Text>
               <TextInput
                 style={styles.formControl}
-                placeholder="Nhập email"
+                placeholder="Enter email"
                 placeholderTextColor="#bfb5b5"
                 keyboardType="default"
                 returnKeyType="next"
@@ -138,7 +143,7 @@ const SignUp = (props) => {
               <Text style={styles.label}>Password:</Text>
               <TextInput
                 style={styles.formControl}
-                placeholder="Nhập password "
+                placeholder="Enter password "
                 placeholderTextColor="#bfb5b5"
                 keyboardType="default"
                 returnKeyType="next"
@@ -159,7 +164,7 @@ const SignUp = (props) => {
               <Text style={styles.label}>Name:</Text>
               <TextInput
                 style={styles.formControl}
-                placeholder="Nhập tên "
+                placeholder="Enter name "
                 placeholderTextColor="#bfb5b5"
                 autoCapitalize="none" // tắt tự động viết hoa chữ cái đầu input
                 keyboardType="default"
@@ -196,7 +201,7 @@ const SignUp = (props) => {
               <Text style={styles.label}>Phone:</Text>
               <TextInput
                 style={styles.formControl}
-                placeholder="Nhập SĐT"
+                placeholder="Enter phone number"
                 placeholderTextColor="#bfb5b5"
                 keyboardType="default"
                 returnKeyLabel="Submit"
@@ -216,14 +221,14 @@ const SignUp = (props) => {
 
               <View style={styles.containerBtn}>
                 <Button
-                  title="ĐĂNG KÍ"
+                  title="REGISTER"
                   // eslint-disable-next-line react-native/no-inline-styles
                   buttonStyle={{...styles.btn, backgroundColor: '#F93C66'}}
                   onPress={handleSubmit}
                 />
 
                 <Button
-                  title="HỦY"
+                  title="CANCEL"
                   // eslint-disable-next-line react-native/no-inline-styles
                   buttonStyle={{
                     ...styles.btn,

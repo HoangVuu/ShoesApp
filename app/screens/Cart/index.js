@@ -56,7 +56,10 @@ const Cart = () => {
     <SafeAreaView style={{backgroundColor: '#fff'}}>
       <View style={styles.headerContainer}>
         <Text style={styles.textHeader}>My Cart</Text>
-        <Text style={styles.total}> Total {getSum()} items</Text>
+        <Text style={styles.total}>
+          {' '}
+          Total {getSum()} {getSum() === 0 ? 'item' : 'items'}
+        </Text>
       </View>
       {/* Scroll list cart */}
       {/* <TouchableOpacity>
@@ -82,7 +85,7 @@ const Cart = () => {
       ) : (
         <View style={styles.emptyContainer}>
           <Text style={{color: '#847d7d'}}>
-            Giỏ hàng của bạn đang trống, vui lòng chọn giày
+            Your cart is empty. Please choose shoes.
           </Text>
         </View>
       )}
@@ -168,7 +171,7 @@ const styles = StyleSheet.create({
 
   emptyContainer: {
     alignItems: 'center',
-    marginTop: 20,
-    height: height * 0.54,
+    paddingTop: 20,
+    height: height * 0.58,
   },
 });
