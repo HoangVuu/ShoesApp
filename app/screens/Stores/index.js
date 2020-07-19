@@ -20,18 +20,20 @@ import {getAllStore} from '../../redux/actions';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Feather';
 import IconE from 'react-native-vector-icons/Entypo';
-import RBSheet from 'react-native-raw-bottom-sheet';
+import BottomSheet from 'reanimated-bottom-sheet';
+import Animated from 'react-native-reanimated';
 
 const {width, height} = Dimensions.get('window');
 
 const Stores = () => {
   const dispatch = useDispatch();
-  const refRBSheet = useRef();
+  let bs = useRef();
+  const [isBottom, setIsBottom] = useState(false);
   const [userLocation, setUserLocation] = useState({
     latitude: 10.883202,
     longitude: 106.781713,
   });
-
+  const fall = new Animated.Value(1);
   //
   // latitude: 0, 10.870759
   // longitude: 0, 106.785955
@@ -79,10 +81,6 @@ const Stores = () => {
   // }, []);
   console.log('storesList', storesList);
 
-  const test = () => {
-    console.log('test click gg map');
-  };
-
   useEffect(() => {
     dispatch(getAllStore());
     console.log('object', storesList);
@@ -106,13 +104,22 @@ const Stores = () => {
       return {...item, coords: coords[index]};
     });
 
+  const renderHeader = () => {
+    return (
+      <View style={styles.maskContainer}>
+        <View style={styles.mask}>
+          <Text> - </Text>
+        </View>
+      </View>
+    );
+  };
   const MyComponent = () => {
     if (!storesList) {
       return null;
     }
 
     return (
-      <ScrollView style={{height: height * 0.2}}>
+      <ScrollView style={{width: width}}>
         <FlatList
           showsHorizontalScrollIndicator={false}
           data={storesList}
@@ -186,27 +193,27 @@ const Stores = () => {
 
             <TouchableOpacity
               style={styles.bottomContainer}
-              onPress={() => refRBSheet.current.open()}>
+              onPress={() => {
+                if (bs && bs.snapTo) {
+                  bs.snapTo(0);
+                }
+              }}>
               <Text style={styles.bottomSheet}>VIEW STORES LIST </Text>
             </TouchableOpacity>
-            <RBSheet
-              ref={refRBSheet}
-              // ref={(ref) => {
-              //   this[RBSheet + index] = ref;
-              // }}
-              closeOnDragDown={true}
-              closeOnPressMask={false}
-              customStyles={{
-                wrapper: {
-                  backgroundColor: 'transparent',
-                },
-                draggableIcon: {
-                  backgroundColor: '#000',
-                },
-              }}>
-              {/* List of Stores  */}
-              {MyComponent()}
-            </RBSheet>
+
+            {/* {isBottom && ( */}
+            <BottomSheet
+              ref={(r) => {
+                bs = r;
+              }}
+              snapPoints={[170, 0]}
+              initialSnap={1}
+              renderContent={MyComponent}
+              renderHeader={renderHeader}
+              enabledGestureInteraction={true}
+              callbackNode={fall}
+            />
+            {/* )} */}
           </SafeAreaView>
         )
       )}
@@ -236,8 +243,9 @@ const styles = StyleSheet.create({
   },
 
   destinationWrapper: {
+    width: width,
     backgroundColor: '#fff',
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     paddingVertical: 5,
     flexDirection: 'row',
     alignItems: 'center',
@@ -287,5 +295,25 @@ const styles = StyleSheet.create({
   bottomSheet: {
     color: '#fff',
     textTransform: 'uppercase',
+  },
+
+  maskContainer: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    width: width,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+
+  mask: {
+    backgroundColor: '#000',
+    width: width * 0.07,
+    borderRadius: 20,
+    height: height * 0.008,
+    marginTop: 10,
+    // backgroundColor: '#000',
   },
 });
