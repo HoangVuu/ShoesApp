@@ -33,7 +33,7 @@ const ProfileEdit = (props) => {
     state.userInfo.data ? state.userInfo.data.content.accessToken : null,
   );
   const profile = useSelector((state) => state.userInfo.profile);
-  console.log('profile edit', profile);
+  console.log('profile', profile);
 
   const [account, setAccount] = useState({
     email: '',
@@ -87,19 +87,15 @@ const ProfileEdit = (props) => {
     const body = {...formik.values, gender: isChoose};
 
     if (accessToken) {
+      console.log('body gui', body);
       dispatch(updateProfile(body, accessToken));
       // if (accessToken) {
       //   dispatch(getProfile(accessToken));
       // }
     }
-    Toast.show(
-      'Thay đổi thông tin tài khoản thành công.',
-      200,
-      Toast.LONG,
-      Toast.BOTTOM,
-    );
-    // handleGoBack();
-    navigation.navigate('Profile');
+    Toast.show('Update profile successfully', 200, Toast.LONG, Toast.BOTTOM);
+    handleGoBack();
+    // navigation.navigate('Profile');
   };
 
   var radio_props = [

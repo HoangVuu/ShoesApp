@@ -43,10 +43,6 @@ const FavoriteItem = (props) => {
     });
   };
 
-  useEffect(() => {
-    console.log('item?.image', item);
-  }, []);
-
   return (
     <TouchableOpacity onPress={goToDetail}>
       <View style={styles.favorite}>

@@ -145,7 +145,7 @@ const ProductDetail = (props) => {
                         />
                       </TouchableOpacity>
                       <Text style={styles.category}>
-                        {/* {productDetail?.categories[0].category} */}NIKE
+                        {/* {productDetail?.categories[0].category} */}ADIDAS
                       </Text>
 
                       <TouchableOpacity

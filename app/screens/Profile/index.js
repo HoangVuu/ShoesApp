@@ -26,6 +26,7 @@ const {width, height} = Dimensions.get('window');
 
 const Profile = (props) => {
   const dispatch = useDispatch();
+  const [avatarSource, setAvatarSource] = useState();
   const accessToken = useSelector((state) =>
     state.userInfo?.data?.content
       ? state.userInfo.data.content.accessToken
@@ -34,6 +35,8 @@ const Profile = (props) => {
 
   const profile = useSelector((state) => state.userInfo.profile);
   const isLogin = useSelector((state) => state.userInfo.isLogin);
+  const info = useSelector((state) => state.userInfo);
+
 
   const options = {
     title: 'Select Avatar',
@@ -70,6 +73,8 @@ const Profile = (props) => {
         console.log('sourceImg', sourceImg);
         // Call Axios, data chính là data đã tạo ra từ formData ở trên
         // dispatch(updateAvatar());
+        const source = {uri: sourceImg.uri};
+        setAvatarSource(source);
       }
     });
   };
@@ -99,12 +104,16 @@ const Profile = (props) => {
 
   useEffect(() => {
     accessToken && dispatch(getProfile(accessToken));
-  }, [accessToken]);
+    console.log('getProfile', profile);
+    console.log('isLogin', isLogin);
+    console.log('info', info);
+
+  }, [accessToken, profile]);
 
   const renderLoading = () => {
     return (
       <View style={styles.loading}>
-        <ActivityIndicator size="large" color="#517ad5" />
+        <ActivityIndicator size="large" color="#F93C66" />
       </View>
     );
   };
@@ -117,22 +126,42 @@ const Profile = (props) => {
         ) : (
           // eslint-disable-next-line react-native/no-inline-styles
           <SafeAreaView style={{backgroundColor: '#fff', height: height}}>
-            <ImageBackground
-              source={{uri: profile?.avatar}}
-              style={styles.container}>
-              <View style={styles.topContainer}>
-                <TouchableOpacity
-                  style={styles.btnEdit}
-                  onPress={onEditProfile}>
-                  <IconE
-                    name="edit"
-                    size={25}
-                    // eslint-disable-next-line react-native/no-inline-styles
-                  />
-                </TouchableOpacity>
-              </View>
-            </ImageBackground>
-            <Image style={styles.avatar} source={{uri: profile?.avatar}} />
+            {!avatarSource ? (
+              <ImageBackground
+                source={{uri: profile?.avatar}}
+                style={styles.container}>
+                <View style={styles.topContainer}>
+                  <TouchableOpacity
+                    style={styles.btnEdit}
+                    onPress={onEditProfile}>
+                    <IconE
+                      name="edit"
+                      size={25}
+                      // eslint-disable-next-line react-native/no-inline-styles
+                    />
+                  </TouchableOpacity>
+                </View>
+              </ImageBackground>
+            ) : (
+              <ImageBackground source={avatarSource} style={styles.container}>
+                <View style={styles.topContainer}>
+                  <TouchableOpacity
+                    style={styles.btnEdit}
+                    onPress={onEditProfile}>
+                    <IconE
+                      name="edit"
+                      size={25}
+                      // eslint-disable-next-line react-native/no-inline-styles
+                    />
+                  </TouchableOpacity>
+                </View>
+              </ImageBackground>
+            )}
+            {!avatarSource ? (
+              <Image style={styles.avatar} source={{uri: profile?.avatar}} />
+            ) : (
+              <Image style={styles.avatar} source={avatarSource} />
+            )}
             <TouchableOpacity
               title="Pick image"
               type="solid"
@@ -243,6 +272,7 @@ export default Profile;
 
 const styles = StyleSheet.create({
   loading: {
+    backgroundColor: '#517ad5',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -250,6 +280,7 @@ const styles = StyleSheet.create({
 
   container: {
     width: width,
+    borderBottomLeftRadius: 250,
   },
 
   topContainer: {
@@ -264,16 +295,18 @@ const styles = StyleSheet.create({
   avatar: {
     zIndex: 1,
     position: 'absolute',
-    borderRadius: width * 0.12,
-    height: width * 0.24,
-    width: width * 0.24,
-    marginLeft: 0.1 * width,
+    borderRadius: width * 0.14,
+    height: width * 0.28,
+    width: width * 0.28,
+    borderColor: '#fff',
+    borderWidth: 3,
+    marginLeft: 0.08 * width,
     marginTop: height * 0.23,
   },
 
   editAva: {
-    marginLeft: 0.1 * width,
-    marginTop: height * 0.23,
+    marginLeft: 0.08 * width,
+    marginTop: height * 0.24,
     zIndex: 2,
     position: 'absolute',
   },

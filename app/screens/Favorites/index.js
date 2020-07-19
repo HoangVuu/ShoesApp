@@ -21,7 +21,6 @@ const Favorites = () => {
   const lovedList = useSelector((state) => state.favorite);
 
   useEffect(() => {
-    console.log('lovedList', lovedList);
     dispatch(getFavorites());
   });
 

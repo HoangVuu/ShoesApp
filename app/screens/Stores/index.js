@@ -154,7 +154,7 @@ const Stores = () => {
     <>
       {!storesList.length && !newStoresList.length ? (
         <View style={styles.loading}>
-          <ActivityIndicator size="large" color="#517ad5" />
+          <ActivityIndicator size="large" color="#F93C66" />
         </View>
       ) : (
         userLocation && (
@@ -237,6 +237,7 @@ const styles = StyleSheet.create({
   },
 
   loading: {
+    backgroundColor: '#517ad5',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -293,6 +294,8 @@ const styles = StyleSheet.create({
   },
 
   bottomSheet: {
+    fontWeight: '700',
+    fontSize: 16,
     color: '#fff',
     textTransform: 'uppercase',
   },
@@ -309,11 +312,10 @@ const styles = StyleSheet.create({
   },
 
   mask: {
-    backgroundColor: '#000',
+    backgroundColor: 'gray',
     width: width * 0.07,
     borderRadius: 20,
     height: height * 0.008,
     marginTop: 10,
-    // backgroundColor: '#000',
   },
 });

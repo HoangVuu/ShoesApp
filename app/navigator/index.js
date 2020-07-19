@@ -24,10 +24,16 @@ const Stack = createStackNavigator();
 const AppContainer = () => {
   const dispatch = useDispatch(); // hỗ trợ dispatch ko cần connect
 
+  const logOut = () => {
+    dispatch({
+      type: 'SET_USER_INFO',
+    });
+  };
+
   useEffect(() => {
+    logOut();
     //1. Đem lưu trên store
     AsyncStorage.getItem('userInfo').then((val) => {
-      console.log(val);
       dispatch(createAction(SET_USER_INFO, val));
       //2. Lấy userInfo xuống store và tiến hành ẩn hiện các stack sign in
     });

@@ -60,8 +60,6 @@ const Product = (props) => {
 
   const handleFavorite = () => {
     setIsLove(!isLove);
-    console.log('love', isLove);
-    console.log('userInfo.isLogin', userInfo.isLogin);
 
     isLove ? addItem() : removeItem();
   };
@@ -80,9 +78,6 @@ const Product = (props) => {
       {cancelable: false},
     );
   };
-
-  console.log('item.id', item.id);
-  console.log('list Liked', listLiked);
 
   useEffect(() => {
     if (listLiked.some((favo) => favo === item.id)) {

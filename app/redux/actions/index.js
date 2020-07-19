@@ -89,54 +89,6 @@ export const actFetchDetail = (id) => {
   };
 };
 
-export const likeProduct = (id, auth) => {
-  //async action
-  return (dispatch) => {
-    axios({
-      method: 'GET',
-      url: `http://svcy3.myclass.vn/api/Users/like?productId=${id}`,
-      headers: {
-        Authorization: `Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ2dTEyMyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlZJRVdfUFJPRklMRSIsIm5iZiI6MTU5MzkzNTkxOSwiZXhwIjoxNTkzOTM5NTE5fQ.YXlv3pqXcZIvS45jVb1ZSJuZynP7c0Fn0REwSUj2_rE`,
-      },
-    })
-      .then((res) => {
-        console.log(res.data.content);
-        console.log('auth', auth);
-      })
-      .catch((err) => console.log({...err}));
-  };
-};
-
-export const dislikeProduct = (id, auth) => {
-  return (dispatch) => {
-    axios({
-      method: 'GET',
-      url: `http://svcy3.myclass.vn/api/Users/unlike?productId=${id}`,
-      headers: {
-        Authorization: `Bearer ${auth}`,
-      },
-    })
-      .then((res) => console.log(res.data.content))
-      .catch((err) => console.log({...err}));
-  };
-};
-
-export const getAllFavorites = (auth) => {
-  return (dispatch) => {
-    axios({
-      method: 'GET',
-      url: 'http://svcy3.myclass.vn/api/Users/getproductfavorite',
-      headers: {
-        Authorization: `Bearer ${auth}`,
-      },
-    })
-      .then((res) => {
-        dispatch(createAction(FETCH_PRODUCT_FAVORITES, res.data.content));
-      })
-      .catch((err) => console.log({...err}));
-  };
-};
-
 export const getProfile = (auth) => {
   return (dispatch) => {
     axios({
@@ -179,7 +131,7 @@ export const updateProfile = (account, auth) => {
     })
       .then((res) => {
         getProfile(auth);
-        console.log('res.data.content', res.data);
+        console.log('sau khi update', res.data);
       })
       .catch((err) => console.log('err', {...err}));
   };

@@ -17,7 +17,6 @@ const {width, height} = Dimensions.get('window');
 const CardItem = (props) => {
   const dispatch = useDispatch();
   const {card} = props;
-  console.log('card', card);
 
   const decreaseQuantity = () => {
     dispatch({

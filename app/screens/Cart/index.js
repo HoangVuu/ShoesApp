@@ -20,7 +20,6 @@ const {width, height} = Dimensions.get('window');
 const Cart = () => {
   const dispatch = useDispatch();
   const cartList = useSelector((state) => state.cart);
-  console.log('cartList', cartList);
   useEffect(() => {
     dispatch(getCart());
   });

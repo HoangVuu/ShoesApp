@@ -77,7 +77,6 @@ const SignUp = (props) => {
     }
 
     const body = {...formik.values, gender: isChoose};
-    console.log('body', body);
 
     dispatch(signUp(body));
     Toast.show(
@@ -93,10 +92,6 @@ const SignUp = (props) => {
     {label: 'Male', value: false},
     {label: 'Female', value: true},
   ];
-
-  useEffect(() => {
-    console.log('isChoose', isChoose);
-  }, [isChoose]);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

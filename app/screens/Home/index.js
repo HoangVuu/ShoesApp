@@ -31,7 +31,6 @@ const Home = () => {
   const allProducts = useSelector((state) => state.products.allProducts);
   const [selectedCategory, setSelectedCategory] = useState(categoryList[0]?.id);
   const productsList = useSelector((state) => state.products?.productsList);
-  const [isDisplay, setIsDisplay] = useState(true);
   let _carousel = useRef();
   // const [fadeAnim] = useState(new Animated.Value(0));
   // const [slideAnim] = useState(new Animated.Value(-200));
