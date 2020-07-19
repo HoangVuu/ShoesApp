@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    fontFamily: 'Muli',
     // color: '#F93C66',
     fontWeight: 'bold',
   },

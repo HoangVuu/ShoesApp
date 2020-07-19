@@ -42,11 +42,7 @@ const Favorites = () => {
             removeClippedSubviews
             showsVerticalScrollIndicator={false}
             renderItem={({item}) => {
-              return (
-                <TouchableOpacity>
-                  <FavoriteItem key={item.id} item={item} />
-                </TouchableOpacity>
-              );
+              return <FavoriteItem key={item.id} item={item} />;
             }}
             numColumns={2}
             keyExtractor={(item, index) => index}

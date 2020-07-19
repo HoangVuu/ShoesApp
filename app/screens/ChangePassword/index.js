@@ -44,13 +44,13 @@ const ChangePassword = (props) => {
   const accountSchema = yup.object().shape({
     email: yup
       .string()
-      .required('*Email bắt buộc nhập')
+      .required('*Email is required')
       // .email('*Vui lòng nhập đúng email')
-      .max(40, '*Email nhỏ hơn 40 kí tự '),
+      .max(40, '*Email must be less than 40 characters'),
     newPassword: yup
       .string()
-      .required('*Mật khẩu bắt buộc nhập')
-      .min(5, '*Mật khẩu phải lớn hơn 6 kí tự'),
+      .required('*Password is required')
+      .min(5, '*Password must be more than 5 chracters'),
   });
 
   const formik = useFormik({
@@ -81,12 +81,7 @@ const ChangePassword = (props) => {
     console.log('body', body);
     dispatch(changePassword(body, accessToken));
 
-    Toast.show(
-      'Cập nhập mật khẩu tài khoản thành công.',
-      200,
-      Toast.LONG,
-      Toast.BOTTOM,
-    );
+    Toast.show('Update Profile successful.', 200, Toast.LONG, Toast.BOTTOM);
     handleGoBack();
   };
 
@@ -117,7 +112,7 @@ const ChangePassword = (props) => {
         </TouchableOpacity>
 
         <Title
-          title="THAY ĐỔI MẬT KHẨU"
+          title="CHANGE PASSWORD"
           customStyle={{fontSize: 22, color: '#F93C66'}}
         />
 
@@ -173,14 +168,14 @@ const ChangePassword = (props) => {
 
               <View style={styles.containerBtn}>
                 <Button
-                  title="LƯU"
+                  title="SAVE"
                   // eslint-disable-next-line react-native/no-inline-styles
                   buttonStyle={{...styles.btn, backgroundColor: '#F93C66'}}
                   onPress={handleSubmit}
                 />
 
                 <Button
-                  title="HỦY"
+                  title="CANCEL"
                   // eslint-disable-next-line react-native/no-inline-styles
                   buttonStyle={{
                     ...styles.btn,

@@ -10,6 +10,7 @@ import {
   Image,
   FlatList,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {actFetchDetail} from '../../redux/actions';
@@ -23,9 +24,12 @@ const {width, height} = Dimensions.get('window');
 const ProductDetail = (props) => {
   const [isSelected, setIsSelected] = useState(0);
   const [data, setData] = useState({detail: null});
+  const [isLove, setIsLove] = useState(true);
   const dispatch = useDispatch();
   const productDetail = useSelector((state) => state.products?.productDetail);
-
+  const userInfo = useSelector((state) => state.userInfo);
+  const lovedList = useSelector((state) => state.favorite);
+  const listLiked = lovedList.map((favoItem) => favoItem.id);
   // const categories = JSON.parse(JSON.stringify(productDetail?.categories));
 
   const {id} = props.route.params;
@@ -34,18 +38,24 @@ const ProductDetail = (props) => {
     setIsSelected(id);
   };
 
+  /**
+   * Add this item to cart
+   */
   const addToCart = () => {
     dispatch({
       type: 'ADD_TO_CART', //thuộc tính bắt buộc: mô tả hành động
       payload: productDetail, // khi nào cần gửi dữ liệu lên thì gửi kèm
     });
-    Toast.show('Đã thêm thành công.', 200, Toast.LONG, Toast.BOTTOM);
+    Toast.show('Add shoes successful.', 200, Toast.LONG, Toast.BOTTOM);
   };
 
   const handleGoBack = () => {
     navigation.goBack();
   };
 
+  /**
+   * Buy now, direct to cart screen right away
+   */
   const buyNow = () => {
     dispatch({
       type: 'ADD_TO_CART', //thuộc tính bắt buộc: mô tả hành động
@@ -54,7 +64,60 @@ const ProductDetail = (props) => {
     navigation.navigate('Cart');
   };
 
-  // console.log('productDe', productDetail);
+  /**
+   * Like Item
+   */
+  const addItem = () => {
+    dispatch({
+      type: 'ADD_TO_FAVORITE',
+      payload: productDetail,
+    });
+  };
+
+  /**
+   * Dislike item
+   */
+  const removeItem = () => {
+    dispatch({
+      type: 'REMOVE_TO_FAVORITE',
+      payload: id,
+    });
+  };
+
+  /**
+   * Handle like and dislike item
+   */
+  const handleFavorite = () => {
+    setIsLove(!isLove);
+    isLove ? addItem() : removeItem();
+  };
+
+  /**
+   * Login request, have to login to like and unlike item
+   */
+  const handleLoginrequest = () => {
+    Alert.alert(
+      'Login request',
+      'You have to login to experience this feature',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ],
+      {cancelable: false},
+    );
+  };
+
+  useEffect(() => {
+    if (listLiked.some((favo) => favo === id)) {
+      setIsLove(false);
+    } else {
+      setIsLove(true);
+    }
+  }, [listLiked]);
+
   useEffect(() => {
     dispatch(actFetchDetail(id));
     setData({...data, detail: productDetail});
@@ -82,12 +145,29 @@ const ProductDetail = (props) => {
                         />
                       </TouchableOpacity>
                       <Text style={styles.category}>
-                        {/* {productDetail?.categories[0].category} */}Nike
+                        {/* {productDetail?.categories[0].category} */}NIKE
                       </Text>
-                      <TouchableOpacity style={styles.btn}>
-                        <Icon name="hearto" style={styles.btnIcon} />
+
+                      <TouchableOpacity
+                        onPress={
+                          userInfo?.isLogin
+                            ? handleFavorite
+                            : handleLoginrequest
+                        }
+                        style={styles.btn}>
+                        {!isLove ? (
+                          <Icon
+                            name="heart"
+                            size={18}
+                            color="red"
+                            style={styles.btnIcon}
+                          />
+                        ) : (
+                          <Icon name="hearto" style={styles.btnIcon} />
+                        )}
                       </TouchableOpacity>
                     </View>
+
                     {/* Main Image */}
                     <Image
                       style={styles.bigImg}
@@ -189,7 +269,7 @@ const ProductDetail = (props) => {
                 />
 
                 <Button
-                  title="Add to Cart"
+                  title="ADD TO CART"
                   // eslint-disable-next-line react-native/no-inline-styles
                   buttonStyle={{
                     ...styles.btnSubmit,
@@ -298,6 +378,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 5,
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 20,
+      height: 20,
+    },
+    shadowOpacity: 1,
+    elevation: 13,
     // flexShrink: 0,
   },
   info: {
@@ -310,6 +398,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     flexShrink: 0,
+    width: width * 0.7,
   },
 
   priceContainer: {

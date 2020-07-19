@@ -14,7 +14,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import {getProfile, updateAvatar} from '../../redux/actions';
+import {getProfile} from '../../redux/actions';
 import Icon from 'react-native-vector-icons/AntDesign';
 import IconF from 'react-native-vector-icons/FontAwesome';
 import IconE from 'react-native-vector-icons/Entypo';
@@ -33,6 +33,7 @@ const Profile = (props) => {
   );
 
   const profile = useSelector((state) => state.userInfo.profile);
+  const isLogin = useSelector((state) => state.userInfo.isLogin);
 
   const options = {
     title: 'Select Avatar',
@@ -95,7 +96,6 @@ const Profile = (props) => {
       {text: 'OK', onPress: () => logOut()},
     ]);
   };
-  console.log('profile', profile);
 
   useEffect(() => {
     accessToken && dispatch(getProfile(accessToken));
@@ -111,112 +111,127 @@ const Profile = (props) => {
 
   return (
     <>
-      {/* {!profile ? renderLoading() : null} */}
-      {profile ? (
-        // eslint-disable-next-line react-native/no-inline-styles
-        <SafeAreaView style={{backgroundColor: '#fff'}}>
-          <ImageBackground
-            source={{uri: profile?.avatar}}
-            style={styles.container}>
-            <View style={styles.topContainer}>
-              <TouchableOpacity style={styles.btnEdit} onPress={onEditProfile}>
-                <IconE
-                  name="edit"
-                  size={25}
-                  // eslint-disable-next-line react-native/no-inline-styles
+      {isLogin ? (
+        !profile ? (
+          renderLoading()
+        ) : (
+          // eslint-disable-next-line react-native/no-inline-styles
+          <SafeAreaView style={{backgroundColor: '#fff', height: height}}>
+            <ImageBackground
+              source={{uri: profile?.avatar}}
+              style={styles.container}>
+              <View style={styles.topContainer}>
+                <TouchableOpacity
+                  style={styles.btnEdit}
+                  onPress={onEditProfile}>
+                  <IconE
+                    name="edit"
+                    size={25}
+                    // eslint-disable-next-line react-native/no-inline-styles
+                  />
+                </TouchableOpacity>
+              </View>
+            </ImageBackground>
+            <Image style={styles.avatar} source={{uri: profile?.avatar}} />
+            <TouchableOpacity
+              title="Pick image"
+              type="solid"
+              buttonStyle={styles.imgBtn}
+              onPress={pickImage}
+              style={styles.editAva}>
+              <Icon name="camera" size={22} />
+            </TouchableOpacity>
+
+            <View>
+              <Text style={styles.text}>MY PROFILE</Text>
+            </View>
+
+            <View style={styles.bottomContainer}>
+              <View style={styles.rowInfo}>
+                <Icon
+                  name="user"
+                  size={20}
+                  color="#F93C66"
+                  style={styles.icon}
                 />
-              </TouchableOpacity>
-            </View>
-          </ImageBackground>
-          <Image style={styles.avatar} source={{uri: profile?.avatar}} />
-          <TouchableOpacity
-            title="Pick image"
-            type="solid"
-            buttonStyle={styles.imgBtn}
-            onPress={pickImage}
-            style={styles.editAva}>
-            <Icon name="camera" size={22} />
-          </TouchableOpacity>
+                <Text style={styles.textInfo}>{profile?.name}</Text>
+              </View>
 
-          <View>
-            <Text style={styles.text}>Thông tin tài khoản</Text>
-          </View>
+              <View style={styles.rowInfo}>
+                <IconF
+                  name="transgender"
+                  size={22}
+                  color="#F93C66"
+                  style={styles.icon}
+                />
+                <Text style={styles.textInfo}>
+                  {profile?.gender ? 'Female' : 'Male'}
+                </Text>
+              </View>
 
-          <View style={styles.bottomContainer}>
-            <View style={styles.rowInfo}>
-              <Icon name="user" size={20} color="#F93C66" style={styles.icon} />
-              <Text style={styles.textInfo}>{profile?.name}</Text>
-            </View>
+              <View style={styles.rowInfo}>
+                <Icon
+                  name="mail"
+                  size={22}
+                  color="#F93C66"
+                  style={styles.icon}
+                />
+                <Text style={styles.textInfo}>{profile?.email}</Text>
+              </View>
 
-            <View style={styles.rowInfo}>
-              <IconF
-                name="transgender"
-                size={22}
-                color="#F93C66"
-                style={styles.icon}
-              />
-              <Text style={styles.textInfo}>
-                {profile?.gender ? 'Nữ' : 'Nam'}
-              </Text>
-            </View>
-
-            <View style={styles.rowInfo}>
-              <Icon name="mail" size={22} color="#F93C66" style={styles.icon} />
-              <Text style={styles.textInfo}>{profile?.email}</Text>
+              <View style={styles.rowInfo}>
+                <Icon
+                  name="phone"
+                  size={22}
+                  color="#F93C66"
+                  style={styles.icon}
+                />
+                <Text style={styles.textInfo}>{profile?.phone}</Text>
+              </View>
             </View>
 
-            <View style={styles.rowInfo}>
-              <Icon
-                name="phone"
-                size={22}
-                color="#F93C66"
-                style={styles.icon}
-              />
-              <Text style={styles.textInfo}>{profile?.phone}</Text>
-            </View>
-          </View>
+            {profile.email?.includes('facebook') ? (
+              <View
+                style={{
+                  alignItems: 'center',
+                  backgroundColor: '#fff',
+                  paddingBottom: 30,
+                }}>
+                <Button
+                  title="ĐĂNG XUẤT"
+                  // eslint-disable-next-line react-native/no-inline-styles
+                  buttonStyle={{
+                    ...styles.btn,
+                    backgroundColor: '#F93C66',
+                    height: height * 0.07,
+                    width: width * 0.9,
+                    borderRadius: 15,
+                  }}
+                  onPress={showNotify}
+                />
+              </View>
+            ) : (
+              <View style={styles.containerBtn}>
+                <Button
+                  title="LOGOUT"
+                  // eslint-disable-next-line react-native/no-inline-styles
+                  buttonStyle={{...styles.btn, backgroundColor: '#F93C66'}}
+                  onPress={showNotify}
+                />
 
-          {profile.email?.includes('facebook') ? (
-            <View
-              style={{
-                alignItems: 'center',
-                backgroundColor: '#fff',
-                paddingBottom: 30,
-              }}>
-              <Button
-                title="ĐĂNG XUẤT"
-                // eslint-disable-next-line react-native/no-inline-styles
-                buttonStyle={{
-                  ...styles.btn,
-                  backgroundColor: '#F93C66',
-                  height: height * 0.07,
-                  width: width * 0.9,
-                  borderRadius: 15,
-                }}
-                onPress={showNotify}
-              />
-            </View>
-          ) : (
-            <View style={styles.containerBtn}>
-              <Button
-                title="ĐĂNG XUẤT"
-                // eslint-disable-next-line react-native/no-inline-styles
-                buttonStyle={{...styles.btn, backgroundColor: '#F93C66'}}
-                onPress={showNotify}
-              />
-
-              <Button
-                title="ĐỔI MẬT KHẨU"
-                // eslint-disable-next-line react-native/no-inline-styles
-                buttonStyle={{
-                  ...styles.btn,
-                  backgroundColor: '#517ad5',
-                }}
-                onPress={changePassword}
-              />
-            </View>
-          )}
-        </SafeAreaView>
+                <Button
+                  title="CHANGE PASSWORD"
+                  // eslint-disable-next-line react-native/no-inline-styles
+                  buttonStyle={{
+                    ...styles.btn,
+                    backgroundColor: '#517ad5',
+                  }}
+                  onPress={changePassword}
+                />
+              </View>
+            )}
+          </SafeAreaView>
+        )
       ) : (
         <Signin />
       )}
@@ -253,12 +268,12 @@ const styles = StyleSheet.create({
     height: width * 0.24,
     width: width * 0.24,
     marginLeft: 0.1 * width,
-    marginTop: height * 0.2,
+    marginTop: height * 0.23,
   },
 
   editAva: {
     marginLeft: 0.1 * width,
-    marginTop: height * 0.2,
+    marginTop: height * 0.23,
     zIndex: 2,
     position: 'absolute',
   },
@@ -334,7 +349,7 @@ const styles = StyleSheet.create({
   },
 
   btn: {
-    width: width * 0.43,
+    width: width * 0.44,
     height: height * 0.07,
     borderRadius: 15,
   },

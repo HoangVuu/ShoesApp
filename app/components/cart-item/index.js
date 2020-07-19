@@ -42,7 +42,7 @@ const CardItem = (props) => {
   };
 
   const showNotify = () => {
-    Alert.alert('Notification', 'Do you want to delete this product?', [
+    Alert.alert('Notification', 'Do you want to delete this shoes from cart?', [
       {text: 'Cancel', style: 'cancel'},
       {text: 'OK', onPress: () => removeCartItem()},
     ]);

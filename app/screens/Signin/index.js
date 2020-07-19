@@ -21,7 +21,6 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {LoginButton, AccessToken} from 'react-native-fbsdk';
 import {loginWithFacebook} from '../../redux/actions';
 import Title from '../../components/title';
-import LinearGradient from 'react-native-linear-gradient';
 
 const {width, height} = Dimensions.get('window');
 
@@ -76,7 +75,11 @@ const Signin = (props) => {
             return [_textInputRef];
           }}>
           <View style={styles.content}>
-            <Title title="LOGIN" customStyle={{fontSize: 35, color: '#000'}} />
+            <Image
+              style={styles.logo}
+              source={require('../../assets/logo.png')}
+            />
+            <Text style={styles.loginText}>LOGIN</Text>
 
             {isWrong && (
               <Text style={styles.errText}>Sai tài khoản hoặc mật khẩu</Text>
@@ -85,7 +88,7 @@ const Signin = (props) => {
             <View style={styles.form}>
               <TextInput
                 style={styles.formControl}
-                placeholder="Tài khoản"
+                placeholder="Email"
                 placeholderTextColor="gray"
                 keyboardType="default"
                 returnKeyType="next"
@@ -97,7 +100,7 @@ const Signin = (props) => {
               />
               <TextInput
                 style={styles.formControl}
-                placeholder="Mật khẩu"
+                placeholder="Password"
                 placeholderTextColor="gray"
                 keyboardType="default"
                 returnKeyLabel="Submit"
@@ -119,10 +122,10 @@ const Signin = (props) => {
                   style={styles.textSignUpStart}
                   // buttonStyle={styles.btn}
                   onPress={handleSubmit}>
-                  Bạn chưa có tài khoản?
+                  You don't have an account?
                 </Text>
                 <TouchableOpacity onPress={handlesignUp}>
-                  <Text style={styles.textSignUpEnd}> Đăng kí</Text>
+                  <Text style={styles.textSignUpEnd}> Register now</Text>
                 </TouchableOpacity>
               </View>
 
@@ -131,7 +134,7 @@ const Signin = (props) => {
                 style={{
                   justifyContent: 'center',
                   alignItems: 'center',
-                  marginTop: 20,
+                  marginTop: 10,
                 }}>
                 <LoginButton
                   onLoginFinished={(error, result) => {
@@ -141,10 +144,6 @@ const Signin = (props) => {
                       console.log('login is cancelled.');
                     } else {
                       AccessToken.getCurrentAccessToken().then((data) => {
-                        // setFbToken({
-                        //   ...fbToken.facebookToken,
-                        //   facebookToken: data.accessToken.toString(),
-                        // });
                         dispatch(
                           loginWithFacebook({
                             facebookToken: data.accessToken.toString(),
@@ -160,8 +159,6 @@ const Signin = (props) => {
           </View>
         </KeyboardAwareScrollView>
       </TouchableWithoutFeedback>
-      {/* </ImageBackground> */}
-      {/* <LinearGradient colors={['#000', 'transparent']} style={styles.overlay} /> */}
     </SafeAreaView>
   );
 };
@@ -189,8 +186,19 @@ const styles = StyleSheet.create({
     height: height * 0.9,
   },
 
+  loginText: {
+    fontSize: 35,
+    color: '#517ad5',
+    textAlign: 'center',
+    fontWeight: '600',
+    marginBottom: 20,
+  },
+
   logo: {
-    height: 200,
+    display: 'flex',
+    height: height * 0.2,
+    width: width * 0.4,
+    alignSelf: 'center',
   },
 
   formControl: {
@@ -205,16 +213,17 @@ const styles = StyleSheet.create({
   },
 
   btn: {
+    marginTop: 20,
     backgroundColor: '#F93C66',
     height: height * 0.07,
     marginHorizontal: width * 0.05,
-    borderRadius: 15,
+    borderRadius: 50,
   },
 
   signUpContainer: {
     width: width,
     padding: 10,
-    marginTop: height * 0.02,
+    marginTop: height * 0.01,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
@@ -227,6 +236,7 @@ const styles = StyleSheet.create({
 
   textSignUpEnd: {
     color: '#DD9A89',
+    fontWeight: 'bold',
   },
 
   overlay: {

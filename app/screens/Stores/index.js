@@ -19,6 +19,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {getAllStore} from '../../redux/actions';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Feather';
+import IconE from 'react-native-vector-icons/Entypo';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
 const {width, height} = Dimensions.get('window');
@@ -78,6 +79,10 @@ const Stores = () => {
   // }, []);
   console.log('storesList', storesList);
 
+  const test = () => {
+    console.log('test click gg map');
+  };
+
   useEffect(() => {
     dispatch(getAllStore());
     console.log('object', storesList);
@@ -101,6 +106,43 @@ const Stores = () => {
       return {...item, coords: coords[index]};
     });
 
+  const MyComponent = () => {
+    if (!storesList) {
+      return null;
+    }
+
+    return (
+      <ScrollView style={{height: height * 0.2}}>
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          data={storesList}
+          keyExtractor={(item) => item.id}
+          renderItem={({item, index}) => {
+            return (
+              <View style={styles.destinationWrapper}>
+                <View style={styles.destinationContainer}>
+                  <Text style={styles.shopName}>{item.name}</Text>
+                  <View style={styles.addContainer}>
+                    <IconE name="location-pin" size={20} color="#517ad5" />
+                    <Text style={styles.shopAddress}>{item.description}</Text>
+                  </View>
+                </View>
+                <TouchableOpacity
+                  onPress={() =>
+                    Linking.openURL(
+                      `https://www.google.com/maps?saddr=My+Location&daddr=${item.description}`,
+                    )
+                  }>
+                  <Icon name="chevron-right" size={24} color="#517ad5" />
+                </TouchableOpacity>
+              </View>
+            );
+          }}
+        />
+      </ScrollView>
+    );
+  };
+
   return (
     <>
       {!storesList.length && !newStoresList.length ? (
@@ -111,7 +153,7 @@ const Stores = () => {
         userLocation && (
           <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
             <MapView
-              style={{height: height * 0.82}}
+              style={{height: height * 0.8}}
               zoomEnabled
               zoomControlEnabled
               provider={PROVIDER_GOOGLE}
@@ -145,10 +187,13 @@ const Stores = () => {
             <TouchableOpacity
               style={styles.bottomContainer}
               onPress={() => refRBSheet.current.open()}>
-              <Text style={styles.bottomSheet}>VIEW LIST STORES</Text>
+              <Text style={styles.bottomSheet}>VIEW STORES LIST </Text>
             </TouchableOpacity>
             <RBSheet
               ref={refRBSheet}
+              // ref={(ref) => {
+              //   this[RBSheet + index] = ref;
+              // }}
               closeOnDragDown={true}
               closeOnPressMask={false}
               customStyles={{
@@ -160,37 +205,7 @@ const Stores = () => {
                 },
               }}>
               {/* List of Stores  */}
-              <ScrollView style={{height: height * 0.2}}>
-                <FlatList
-                  showsHorizontalScrollIndicator={false}
-                  data={storesList}
-                  keyExtractor={(item) => item.id}
-                  renderItem={({item, index}) => {
-                    return (
-                      <View style={styles.destinationWrapper}>
-                        <View style={styles.destinationContainer}>
-                          <Text style={styles.shopName}>{item.name}</Text>
-                          <Text style={styles.shopAddress}>
-                            {item.description}
-                          </Text>
-                        </View>
-                        <TouchableOpacity
-                          onPress={() =>
-                            Linking.openURL(
-                              `https://www.google.com/maps?saddr=My+Location&daddr=${item.description}`,
-                            )
-                          }>
-                          <Icon
-                            name="chevron-right"
-                            size={24}
-                            color="#517ad5"
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    );
-                  }}
-                />
-              </ScrollView>
+              {MyComponent()}
             </RBSheet>
           </SafeAreaView>
         )
@@ -238,9 +253,17 @@ const styles = StyleSheet.create({
   },
 
   shopName: {
+    marginLeft: 5,
     color: '#000',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+
+  addContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
   },
 
   shopAddress: {
@@ -249,7 +272,6 @@ const styles = StyleSheet.create({
   },
 
   bottomContainer: {
-    marginTop: height * 0.01,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
@@ -259,6 +281,7 @@ const styles = StyleSheet.create({
     width: width * 0.8,
     height: height * 0.06,
     borderRadius: 8,
+    marginVertical: height * 0.02,
   },
 
   bottomSheet: {

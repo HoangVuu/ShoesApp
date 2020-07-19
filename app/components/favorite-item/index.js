@@ -8,7 +8,7 @@ import {
   Dimensions,
   Alert,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
+import {withNavigation} from '@react-navigation/compat';
 import IconF from 'react-native-vector-icons/FontAwesome';
 import {useDispatch} from 'react-redux';
 
@@ -19,11 +19,21 @@ const FavoriteItem = (props) => {
 
   const {item} = props;
 
+  const goToDetail = () => {
+    props.navigation.navigate('ProductDetail', {
+      id: item.id,
+    });
+  };
+
   const showNotify = () => {
-    Alert.alert('Notification', 'Do you want to delete this product?', [
-      {text: 'Cancel', style: 'cancel'},
-      {text: 'OK', onPress: () => deleteFavorite()},
-    ]);
+    Alert.alert(
+      'Notification',
+      'Do you want to delete this shoes from favorites lists?',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {text: 'OK', onPress: () => deleteFavorite()},
+      ],
+    );
   };
 
   const deleteFavorite = () => {
@@ -38,16 +48,18 @@ const FavoriteItem = (props) => {
   }, []);
 
   return (
-    <View style={styles.favorite}>
-      <TouchableOpacity onPress={showNotify} style={styles.deleteAll}>
-        <IconF name="remove" size={18} />
-      </TouchableOpacity>
-      <Image source={{uri: item.image}} style={styles.imgContainer} />
-      <View style={styles.bottomContainer}>
-        <Text style={styles.name}>{item.name}</Text>
-        <Text style={styles.price}>${item.price}</Text>
+    <TouchableOpacity onPress={goToDetail}>
+      <View style={styles.favorite}>
+        <TouchableOpacity onPress={showNotify} style={styles.deleteAll}>
+          <IconF name="remove" size={18} />
+        </TouchableOpacity>
+        <Image source={{uri: item.image}} style={styles.imgContainer} />
+        <View style={styles.bottomContainer}>
+          <Text style={styles.name}>{item.name}</Text>
+          <Text style={styles.price}>${item.price}</Text>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -103,4 +115,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FavoriteItem;
+export default withNavigation(FavoriteItem);

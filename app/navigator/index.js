@@ -50,7 +50,6 @@ const AppContainer = () => {
             tabBarIcon: ({color}) => (
               <Icon name="home" size={25} color={color} />
             ),
-            // topTabs: {hideShadow: true, backgroundColor: 'black'},
           }}
         />
         <Tabs.Screen
@@ -67,7 +66,7 @@ const AppContainer = () => {
           component={Cart}
           options={{
             tabBarIcon: ({color}) => (
-              <Icon name="shoppingcart" size={25} color={color} />
+              <Icon name="shoppingcart" size={28} color={color} />
             ),
           }}
         />

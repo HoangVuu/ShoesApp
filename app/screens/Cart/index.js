@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
 
   emptyContainer: {
     alignItems: 'center',
-    marginTop: 20,
-    height: height * 0.54,
+    paddingTop: 20,
+    height: height * 0.58,
   },
 });
